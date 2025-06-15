@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { ComicHeader } from "@/components/ui/ComicHeader";
 import { FloatingMascot } from "@/components/ui/FloatingMascot";
 import { AlbumView } from "@/components/gallery/AlbumView";
 import { AppSettingsModal, HomeCustomization } from "@/components/settings/AppSettingsModal";
+import { WelcomeModal } from "@/components/ui/WelcomeModal";
 import { localStorageService } from "@/services/localStorage";
 
 export interface Album {
