@@ -1,4 +1,3 @@
-
 import { AppTheme } from "@/pages/Index";
 
 interface ComicHeaderProps {
@@ -13,11 +12,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
     if (appTheme?.customColors) {
       return {
         ...titleStyle,
-        background: `linear-gradient(45deg, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary}, ${appTheme.customColors.accent})`,
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        backgroundClip: 'text',
-        textShadow: 'none',
+        color: appTheme.customColors.primary,
         fontWeight: '900'
       };
     }

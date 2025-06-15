@@ -1,4 +1,3 @@
-
 import { useState, useRef } from "react";
 import { ArrowLeft, Plus, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -28,6 +27,12 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
     'neon-pop': 'bg-gradient-to-br from-cyan-400 to-blue-500 text-white',
     'vintage-sketch': 'bg-gradient-to-br from-amber-200 to-orange-200 text-gray-800',
     'kawaii-burst': 'bg-gradient-to-br from-pink-300 to-purple-300 text-gray-800',
+    'retro-wave': 'bg-gradient-to-br from-purple-600 to-pink-600 text-white',
+    'forest-nature': 'bg-gradient-to-br from-green-400 to-emerald-600 text-white',
+    'ocean-depths': 'bg-gradient-to-br from-blue-600 to-cyan-500 text-white',
+    'sunset-glow': 'bg-gradient-to-br from-orange-400 to-red-500 text-white',
+    'minimalist-white': 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-800',
+    'galaxy-space': 'bg-gradient-to-br from-indigo-900 to-purple-900 text-white',
   };
 
   const fontStyles = {
@@ -35,6 +40,10 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
     typewriter: 'font-mono',
     bubble: 'font-black',
     'google-font': 'font-sans',
+    'serif-classic': 'font-serif',
+    'sans-modern': 'font-sans',
+    'script-elegant': 'font-cursive',
+    'display-bold': 'font-black',
   };
 
   const handleAddPhoto = () => {
@@ -73,6 +82,112 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
     setShowDetailModal(true);
   };
 
+  const getLayoutClasses = () => {
+    switch (album.layout) {
+      case 'grid':
+        return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+      case 'panel':
+        return 'grid grid-cols-1 md:grid-cols-2 gap-8';
+      case 'vertical':
+        return 'grid grid-cols-1 max-w-2xl mx-auto gap-6';
+      case 'collage':
+        return 'grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4';
+      case 'masonry':
+        return 'columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6';
+      case 'timeline':
+        return 'space-y-8 max-w-4xl mx-auto';
+      case 'polaroid':
+        return 'flex flex-wrap gap-6 justify-center';
+      case 'magazine':
+        return 'grid grid-cols-1 md:grid-cols-12 gap-6';
+      default:
+        return 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+    }
+  };
+
+  const getPhotoCardClasses = (index: number) => {
+    const baseClasses = "bg-white rounded-2xl border-4 border-black cursor-pointer transform hover:scale-105 transition-all duration-200";
+    
+    switch (album.layout) {
+      case 'polaroid':
+        return `${baseClasses} p-4 pb-8 transform ${index % 2 === 0 ? 'rotate-2' : '-rotate-2'} hover:rotate-0 shadow-lg`;
+      case 'timeline':
+        return `${baseClasses} p-6 flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center gap-6`;
+      case 'magazine':
+        return `${baseClasses} p-4 ${index === 0 ? 'md:col-span-8' : index === 1 ? 'md:col-span-4' : index % 3 === 0 ? 'md:col-span-6' : 'md:col-span-3'}`;
+      case 'masonry':
+        return `${baseClasses} p-4 break-inside-avoid mb-6`;
+      case 'panel':
+        return `${baseClasses} p-6 border-8 border-black shadow-xl`;
+      default:
+        return `${baseClasses} p-4`;
+    }
+  };
+
+  const getImageClasses = (index: number) => {
+    switch (album.layout) {
+      case 'timeline':
+        return "w-32 h-32 object-cover rounded-xl";
+      case 'magazine':
+        return `w-full ${index === 0 ? 'h-64' : 'h-40'} object-cover rounded-xl`;
+      case 'masonry':
+        return "w-full h-auto object-cover rounded-xl";
+      default:
+        return "w-full aspect-square object-cover rounded-xl";
+    }
+  };
+
+  const renderPhotoContent = (photo: Photo, index: number) => {
+    if (album.layout === 'timeline') {
+      return (
+        <>
+          <img 
+            src={photo.url} 
+            alt={photo.title || 'Photo'}
+            className={getImageClasses(index)}
+          />
+          <div className="flex-1">
+            {photo.title && (
+              <h4 className="font-bold text-xl text-gray-800 mb-2">{photo.title}</h4>
+            )}
+            {photo.location && (
+              <p className="text-sm text-gray-600 mb-2">📍 {photo.location}</p>
+            )}
+            {photo.backstory && (
+              <p className="text-gray-700">{photo.backstory}</p>
+            )}
+            {photo.date && (
+              <p className="text-xs text-gray-500 mt-2">{photo.date.toLocaleDateString()}</p>
+            )}
+          </div>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <div className={`bg-gray-200 rounded-xl mb-3 flex items-center justify-center overflow-hidden ${album.layout === 'magazine' && index === 0 ? '' : 'aspect-square'}`}>
+          <img 
+            src={photo.url} 
+            alt={photo.title || 'Photo'}
+            className={getImageClasses(index)}
+          />
+        </div>
+        {photo.title && (
+          <h4 className="font-bold text-gray-800">{photo.title}</h4>
+        )}
+        {photo.location && (
+          <p className="text-sm text-gray-600">📍 {photo.location}</p>
+        )}
+        {album.layout === 'polaroid' && (
+          <p className="text-center text-sm text-gray-600 mt-2 font-handwritten">
+            {photo.title || 'Memory'}
+          </p>
+        )}
+      </>
+    );
+  };
+
   return (
     <div className={`min-h-screen bg-gradient-to-br ${appTheme.primaryColor} transition-all duration-500`}>
       <div className="container mx-auto px-4 py-8">
@@ -90,13 +205,13 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
           <Button
             onClick={onBack}
             variant="outline"
-            className="rounded-full comic-shadow"
+            className="rounded-full"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Gallery
           </Button>
           
-          <div className={`flex-1 text-center p-4 rounded-2xl border-4 border-black comic-shadow ${themeStyles[album.theme]}`}>
+          <div className={`flex-1 text-center p-4 rounded-2xl border-4 border-black ${themeStyles[album.theme]}`}>
             <h1 className={`text-3xl font-bold ${album.font !== 'google-font' ? fontStyles[album.font] : ''}`}
                 style={album.googleFont ? { fontFamily: album.googleFont } : {}}>
               {album.title}
@@ -111,7 +226,7 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
         <div className="text-center mb-8">
           <Button
             onClick={handleAddPhoto}
-            className={`bg-gradient-to-r ${appTheme.accentColor} hover:opacity-90 text-white font-bold py-3 px-6 rounded-full comic-shadow transition-all duration-200`}
+            className={`bg-gradient-to-r ${appTheme.accentColor} hover:opacity-90 text-white font-bold py-3 px-6 rounded-full transition-all duration-200`}
           >
             <Plus className="w-5 h-5 mr-2" />
             Add Photos
@@ -126,38 +241,21 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
             <p className="text-gray-500 mb-6">Start adding photos to your album</p>
             <Button
               onClick={handleAddPhoto}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-full comic-shadow"
+              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-full"
             >
               <Upload className="w-5 h-5 mr-2" />
               Upload First Photo
             </Button>
           </div>
         ) : (
-          <div className={`grid gap-6 ${
-            album.layout === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' :
-            album.layout === 'panel' ? 'grid-cols-1 md:grid-cols-2' :
-            album.layout === 'vertical' ? 'grid-cols-1 max-w-2xl mx-auto' :
-            'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
-          }`}>
-            {album.photos.map((photo) => (
+          <div className={getLayoutClasses()}>
+            {album.photos.map((photo, index) => (
               <div
                 key={photo.id}
-                className="bg-white rounded-2xl p-4 border-4 border-black comic-shadow cursor-pointer transform hover:scale-105 transition-all duration-200"
+                className={getPhotoCardClasses(index)}
                 onClick={() => handlePhotoClick(photo)}
               >
-                <div className="aspect-square bg-gray-200 rounded-xl mb-3 flex items-center justify-center overflow-hidden">
-                  <img 
-                    src={photo.url} 
-                    alt={photo.title || 'Photo'}
-                    className="w-full h-full object-cover rounded-xl"
-                  />
-                </div>
-                {photo.title && (
-                  <h4 className="font-bold text-gray-800">{photo.title}</h4>
-                )}
-                {photo.location && (
-                  <p className="text-sm text-gray-600">📍 {photo.location}</p>
-                )}
+                {renderPhotoContent(photo, index)}
               </div>
             ))}
           </div>
