@@ -143,12 +143,20 @@ const Index = () => {
     ? homeCustomization.customEmojis 
     : [];
 
-  // Get dynamic styles for custom themes
-  const getMainBackgroundStyle = () => {
+  // Simplified background class logic
+  const getBackgroundClass = () => {
+    if (appTheme.customColors) {
+      // Create a gradient using custom colors similar to predefined themes
+      return '';
+    }
+    return `bg-gradient-to-br ${appTheme.primaryColor}`;
+  };
+
+  // Simplified background style for custom themes
+  const getBackgroundStyle = () => {
     if (appTheme.customColors) {
       return {
-        background: `linear-gradient(135deg, ${appTheme.customColors.primary}15, ${appTheme.customColors.secondary}15, ${appTheme.customColors.accent}10)`,
-        minHeight: '100vh'
+        background: `linear-gradient(to bottom right, ${appTheme.customColors.primary}30, ${appTheme.customColors.secondary}20, ${appTheme.customColors.accent}25)`
       };
     }
     return {};
@@ -211,10 +219,8 @@ const Index = () => {
 
   return (
     <div 
-      className={`min-h-screen relative overflow-hidden transition-all duration-500 ${
-        appTheme.customColors ? 'bg-white' : `bg-gradient-to-br ${appTheme.primaryColor}`
-      }`}
-      style={appTheme.customColors ? getMainBackgroundStyle() : {}}
+      className={`min-h-screen relative overflow-hidden transition-all duration-500 ${getBackgroundClass()}`}
+      style={getBackgroundStyle()}
     >
       {/* Background Image Overlay */}
       {homeCustomization.backgroundImage && (
