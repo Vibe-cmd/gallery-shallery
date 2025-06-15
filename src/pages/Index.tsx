@@ -143,7 +143,7 @@ const Index = () => {
     ? homeCustomization.customEmojis 
     : [];
 
-  // Get dynamic styles for custom themes - CORRECTED IMPLEMENTATION
+  // Get dynamic styles for custom themes
   const getMainBackgroundStyle = () => {
     if (appTheme.customColors) {
       return {
@@ -199,9 +199,10 @@ const Index = () => {
     return baseStyle;
   };
 
-  const getComicHeaderStyle = () => {
+  const getComicHeaderTheme = () => {
     if (appTheme.customColors) {
       return {
+        ...appTheme,
         accentColor: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`
       };
     }
@@ -270,7 +271,7 @@ const Index = () => {
         </div>
 
         <div style={getTitleStyle()}>
-          <ComicHeader appTheme={getComicHeaderStyle()} customFont={customFont} />
+          <ComicHeader appTheme={getComicHeaderTheme()} customFont={customFont} />
         </div>
         
         {/* Category Filter Bubbles */}
