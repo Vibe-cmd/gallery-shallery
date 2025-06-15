@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -257,18 +256,38 @@ const Index = () => {
           background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
           color: 'white',
           border: `2px solid ${appTheme.customColors.accent}`,
-          textShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+          textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
           fontWeight: 'bold'
         };
       }
       return {
-        backgroundColor: 'rgba(255,255,255,0.9)',
+        backgroundColor: 'rgba(255,255,255,0.95)',
         color: appTheme.customColors.primary,
         border: `2px solid ${appTheme.customColors.primary}`,
+        fontWeight: 'bold',
+        backdropFilter: 'blur(10px)'
+      };
+    }
+    
+    // Improved styling for default theme
+    if (isSelected) {
+      return {
+        backgroundColor: 'rgba(0,0,0,0.8)',
+        color: 'white',
+        border: '2px solid rgba(255,255,255,0.3)',
+        textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
         fontWeight: 'bold'
       };
     }
-    return {};
+    
+    return {
+      backgroundColor: 'rgba(255,255,255,0.95)',
+      color: 'rgba(0,0,0,0.8)',
+      border: '2px solid rgba(255,255,255,0.5)',
+      fontWeight: 'bold',
+      backdropFilter: 'blur(10px)',
+      textShadow: 'none'
+    };
   };
 
   const getCreateButtonStyle = () => {
@@ -446,7 +465,7 @@ const Index = () => {
           <Button
             variant={selectedCategory === null ? "default" : "outline"}
             onClick={() => setSelectedCategory(null)}
-            className={`rounded-full font-bold transition-all duration-200 ${getTextColorClass()}`}
+            className="rounded-full font-bold transition-all duration-200 hover:scale-105"
             style={getButtonStyle(selectedCategory === null)}
           >
             All Albums
@@ -454,9 +473,7 @@ const Index = () => {
           <Button
             variant={selectedCategory === 'favorites' ? "default" : "outline"}
             onClick={() => setSelectedCategory('favorites')}
-            className={`rounded-full font-bold flex items-center gap-2 transition-all duration-200 ${getTextColorClass()} ${
-              selectedCategory === 'favorites' && !appTheme.customColors ? 'bg-red-400' : ''
-            }`}
+            className="rounded-full font-bold flex items-center gap-2 transition-all duration-200 hover:scale-105"
             style={getButtonStyle(selectedCategory === 'favorites')}
           >
             <Heart className="w-4 h-4" />
@@ -467,9 +484,7 @@ const Index = () => {
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
-              className={`rounded-full font-bold flex items-center gap-2 transition-all duration-200 ${getTextColorClass()} ${
-                selectedCategory === category.id && !appTheme.customColors ? category.color : ''
-              }`}
+              className="rounded-full font-bold flex items-center gap-2 transition-all duration-200 hover:scale-105"
               style={getButtonStyle(selectedCategory === category.id)}
             >
               <category.icon className="w-4 h-4" />
