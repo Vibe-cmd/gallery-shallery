@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { ArrowLeft, Plus, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -110,7 +111,7 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
     
     switch (album.layout) {
       case 'polaroid':
-        return `${baseClasses} p-4 pb-8 transform ${index % 2 === 0 ? 'rotate-2' : '-rotate-2'} hover:rotate-0 shadow-lg`;
+        return `${baseClasses} p-3 pb-6 transform ${index % 2 === 0 ? 'rotate-2' : '-rotate-2'} hover:rotate-0 shadow-lg w-48 h-60`;
       case 'timeline':
         return `${baseClasses} p-6 flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center gap-6`;
       case 'magazine':
@@ -126,6 +127,8 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
 
   const getImageClasses = (index: number) => {
     switch (album.layout) {
+      case 'polaroid':
+        return "w-full h-32 object-cover rounded-lg";
       case 'timeline':
         return "w-32 h-32 object-cover rounded-xl";
       case 'magazine':
@@ -211,7 +214,7 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
             Back to Gallery
           </Button>
           
-          <div className={`flex-1 text-center p-4 rounded-2xl border-4 border-black ${themeStyles[album.theme]}`}>
+          <div className={`flex-1 text-center p-4 rounded-2xl border-4 border-black ${themeStyles[album.theme] || themeStyles['pastel-doodle']}`}>
             <h1 className={`text-3xl font-bold ${album.font !== 'google-font' ? fontStyles[album.font] : ''}`}
                 style={album.googleFont ? { fontFamily: album.googleFont } : {}}>
               {album.title}

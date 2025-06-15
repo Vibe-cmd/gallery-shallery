@@ -1,11 +1,13 @@
 
 import { Album } from "@/pages/Index";
 import { Camera, Map, Heart, Tag } from "lucide-react";
+import { useState } from "react";
 
 interface AlbumCardProps {
   album: Album;
   index: number;
   onClick: () => void;
+  onToggleFavorite?: (albumId: string) => void;
 }
 
 const categoryIcons = {
@@ -22,6 +24,12 @@ const themeStyles = {
   'neon-pop': 'bg-gradient-to-br from-cyan-400 to-blue-500 text-white',
   'vintage-sketch': 'bg-gradient-to-br from-amber-200 to-orange-200 text-gray-800',
   'kawaii-burst': 'bg-gradient-to-br from-pink-300 to-purple-300 text-gray-800',
+  'retro-wave': 'bg-gradient-to-br from-purple-600 to-pink-600 text-white',
+  'forest-nature': 'bg-gradient-to-br from-green-400 to-emerald-600 text-white',
+  'ocean-depths': 'bg-gradient-to-br from-blue-600 to-cyan-500 text-white',
+  'sunset-glow': 'bg-gradient-to-br from-orange-400 to-red-500 text-white',
+  'minimalist-white': 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-800',
+  'galaxy-space': 'bg-gradient-to-br from-indigo-900 to-purple-900 text-white',
 };
 
 const fontStyles = {
@@ -29,14 +37,29 @@ const fontStyles = {
   typewriter: 'font-mono',
   bubble: 'font-black',
   'google-font': 'font-sans',
+  'serif-classic': 'font-serif',
+  'sans-modern': 'font-sans',
+  'script-elegant': 'font-cursive',
+  'display-bold': 'font-black',
 };
 
-export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
+export const AlbumCard = ({ album, index, onClick, onToggleFavorite }: AlbumCardProps) => {
   const CategoryIcon = categoryIcons[album.category];
+  const [isFavorite, setIsFavorite] = useState(album.isFavorite || false);
   
   const cardStyle = album.googleFont ? {
     fontFamily: album.googleFont
   } : {};
+
+  const handleFavoriteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const newFavoriteState = !isFavorite;
+    setIsFavorite(newFavoriteState);
+    onToggleFavorite?.(album.id);
+  };
+
+  // Ensure we have a valid theme style, fallback to pastel-doodle if not found
+  const themeClass = themeStyles[album.theme] || themeStyles['pastel-doodle'];
   
   return (
     <div 
@@ -47,15 +70,25 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
         ...cardStyle,
         filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.1))'
       }}
-      onClick={onClick}
     >
       <div 
-        className={`rounded-3xl p-6 ${themeStyles[album.theme]} min-h-[250px] relative overflow-hidden`}
+        className={`rounded-3xl p-6 ${themeClass} min-h-[250px] relative overflow-hidden`}
         style={{
           border: '2px solid rgba(255,255,255,0.2)',
           boxShadow: '0 4px 16px rgba(0,0,0,0.08)'
         }}
+        onClick={onClick}
       >
+        {/* Favorite Heart Icon */}
+        <button
+          onClick={handleFavoriteClick}
+          className="absolute top-2 right-2 z-30 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-200"
+        >
+          <Heart 
+            className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-white/70'} transition-all duration-200`}
+          />
+        </button>
+
         {/* Decorative elements - positioned within rounded area with proper clipping */}
         <div className="absolute top-4 right-4 text-2xl opacity-50 z-10">
           {album.theme === 'comic-noir' && '🖤'}
@@ -64,6 +97,12 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
           {album.theme === 'neon-pop' && '💫'}
           {album.theme === 'vintage-sketch' && '🎨'}
           {album.theme === 'kawaii-burst' && '🦄'}
+          {album.theme === 'retro-wave' && '🌊'}
+          {album.theme === 'forest-nature' && '🌿'}
+          {album.theme === 'ocean-depths' && '🌊'}
+          {album.theme === 'sunset-glow' && '🌅'}
+          {album.theme === 'minimalist-white' && '⚪'}
+          {album.theme === 'galaxy-space' && '🌌'}
         </div>
         
         {/* Category badge */}

@@ -20,6 +20,7 @@ export interface Album {
   coverIcon?: string;
   photos: Photo[];
   createdAt: Date;
+  isFavorite?: boolean;
 }
 
 export interface Photo {
@@ -168,11 +169,20 @@ const Index = () => {
     const album: Album = {
       ...newAlbum,
       id: Date.now().toString(),
-      createdAt: new Date()
+      createdAt: new Date(),
+      isFavorite: false
     };
     setAlbums([...albums, album]);
     setShowCreateModal(false);
     console.log('Created new album:', album);
+  };
+
+  const handleToggleFavorite = (albumId: string) => {
+    setAlbums(albums.map(album => 
+      album.id === albumId 
+        ? { ...album, isFavorite: !album.isFavorite }
+        : album
+    ));
   };
 
   const handleAlbumClick = (album: Album) => {
@@ -469,7 +479,11 @@ const Index = () => {
         </div>
 
         {/* Albums Grid */}
-        <AlbumGrid albums={filteredAlbums} onAlbumClick={handleAlbumClick} />
+        <AlbumGrid 
+          albums={filteredAlbums} 
+          onAlbumClick={handleAlbumClick}
+          onToggleFavorite={handleToggleFavorite}
+        />
 
         {/* Create Album Modal */}
         <CreateAlbumModal
