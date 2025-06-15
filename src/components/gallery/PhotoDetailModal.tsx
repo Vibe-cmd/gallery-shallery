@@ -2,16 +2,17 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Photo } from "@/pages/Index";
-import { X, MapPin, Calendar, Heart, Download, Share2 } from "lucide-react";
+import { X, MapPin, Calendar, Heart, Download, Share2, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface PhotoDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   photo: Photo | null;
+  onDeletePhoto?: (photoId: string) => void;
 }
 
-export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalProps) => {
+export const PhotoDetailModal = ({ isOpen, onClose, photo, onDeletePhoto }: PhotoDetailModalProps) => {
   const { toast } = useToast();
   
   if (!photo) return null;
@@ -95,6 +96,17 @@ export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalPro
     }
   };
 
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this photo? This action cannot be undone.')) {
+      onDeletePhoto?.(photo.id);
+      onClose();
+      toast({
+        title: "Photo Deleted",
+        description: "The photo has been removed from your album.",
+      });
+    }
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden p-0 bg-gradient-to-br from-gray-50 to-gray-100">
@@ -126,6 +138,14 @@ export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalPro
               className="rounded-full bg-black/80 backdrop-blur-sm text-white border-white/20 hover:bg-black/90"
             >
               <Share2 className="w-4 h-4" />
+            </Button>
+            <Button
+              onClick={handleDelete}
+              variant="outline"
+              size="sm"
+              className="rounded-full bg-red-600/80 backdrop-blur-sm text-white border-white/20 hover:bg-red-700/90"
+            >
+              <Trash2 className="w-4 h-4" />
             </Button>
           </div>
 

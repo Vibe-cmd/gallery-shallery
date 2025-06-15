@@ -1,13 +1,14 @@
-
 import { Album } from "@/pages/Index";
-import { Camera, Map, Heart, Tag } from "lucide-react";
+import { Camera, Map, Heart, Tag, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 
 interface AlbumCardProps {
   album: Album;
   index: number;
   onClick: () => void;
   onToggleFavorite?: (albumId: string) => void;
+  onDeleteAlbum?: (albumId: string) => void;
 }
 
 const categoryIcons = {
@@ -43,7 +44,7 @@ const fontStyles = {
   'display-bold': 'font-black',
 };
 
-export const AlbumCard = ({ album, index, onClick, onToggleFavorite }: AlbumCardProps) => {
+export const AlbumCard = ({ album, index, onClick, onToggleFavorite, onDeleteAlbum }: AlbumCardProps) => {
   const CategoryIcon = categoryIcons[album.category];
   const [isFavorite, setIsFavorite] = useState(album.isFavorite || false);
   
@@ -56,6 +57,13 @@ export const AlbumCard = ({ album, index, onClick, onToggleFavorite }: AlbumCard
     const newFavoriteState = !isFavorite;
     setIsFavorite(newFavoriteState);
     onToggleFavorite?.(album.id);
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (window.confirm('Are you sure you want to delete this album? This action cannot be undone.')) {
+      onDeleteAlbum?.(album.id);
+    }
   };
 
   // Ensure we have a valid theme style, fallback to pastel-doodle if not found
@@ -79,15 +87,23 @@ export const AlbumCard = ({ album, index, onClick, onToggleFavorite }: AlbumCard
         }}
         onClick={onClick}
       >
-        {/* Favorite Heart Icon */}
-        <button
-          onClick={handleFavoriteClick}
-          className="absolute top-2 right-2 z-40 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-200"
-        >
-          <Heart 
-            className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-white/70'} transition-all duration-200`}
-          />
-        </button>
+        {/* Action buttons */}
+        <div className="absolute top-2 right-2 z-40 flex gap-2">
+          <button
+            onClick={handleFavoriteClick}
+            className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-200"
+          >
+            <Heart 
+              className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-white/70'} transition-all duration-200`}
+            />
+          </button>
+          <button
+            onClick={handleDeleteClick}
+            className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-red-500/80 transition-all duration-200 group/delete"
+          >
+            <Trash2 className="w-5 h-5 text-white/70 group-hover/delete:text-white transition-all duration-200" />
+          </button>
+        </div>
 
         {/* Decorative elements - positioned within rounded area with proper clipping */}
         <div className="absolute top-4 right-4 text-2xl opacity-50 z-10">
