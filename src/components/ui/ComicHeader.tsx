@@ -1,3 +1,4 @@
+
 import { AppTheme } from "@/pages/Index";
 
 interface ComicHeaderProps {
@@ -75,7 +76,40 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
     if (appTheme?.customColors) {
       return 'text-6xl md:text-8xl font-black transform hover:scale-105 transition-transform duration-300';
     }
-    return `text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r ${appTheme?.accentColor || 'from-purple-600 via-pink-600 to-red-600'} transform hover:scale-105 transition-transform duration-300`;
+    return 'text-6xl md:text-8xl font-black text-transparent bg-clip-text transform hover:scale-105 transition-transform duration-300';
+  };
+
+  const getTitleGradientStyle = () => {
+    if (appTheme?.customColors) {
+      return {};
+    }
+    
+    // Extract gradient colors from accentColor prop
+    const gradientColors = appTheme?.accentColor || 'from-purple-600 via-pink-600 to-red-600';
+    
+    // Convert Tailwind gradient to CSS gradient
+    if (gradientColors.includes('from-purple-600')) {
+      return {
+        backgroundImage: 'linear-gradient(to right, #9333ea, #ec4899, #dc2626)',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        color: 'transparent'
+      };
+    } else if (gradientColors.includes('from-pink-500')) {
+      return {
+        backgroundImage: 'linear-gradient(to right, #ec4899, #a855f7)',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        color: 'transparent'
+      };
+    } else {
+      return {
+        backgroundImage: 'linear-gradient(to right, #9333ea, #ec4899, #dc2626)',
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        color: 'transparent'
+      };
+    }
   };
   
   return (
@@ -119,7 +153,10 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
         <div style={getTitleBackgroundStyle()}>
           <h1 
             className={getTitleClasses()}
-            style={getTitleTextStyle()}
+            style={{
+              ...getTitleTextStyle(),
+              ...getTitleGradientStyle()
+            }}
           >
             Gallery Shallery
           </h1>
@@ -132,7 +169,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
               appTheme?.customColors 
                 ? '' 
                 : 'bg-white'
-            } rounded-2xl px-6 py-3 comic-shadow transform -rotate-1 hover:rotate-0 transition-transform duration-200`}
+            } rounded-2xl px-6 py-3 transform -rotate-1 hover:rotate-0 transition-transform duration-200`}
             style={{
               ...(appTheme?.customColors ? getBubbleBackgroundStyle() : {}),
               border: '2px solid rgba(255,255,255,0.4)',
@@ -148,7 +185,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
           </div>
           
           <div 
-            className="bg-yellow-300 rounded-2xl px-4 py-2 comic-shadow transform rotate-2 hover:rotate-0 transition-transform duration-200"
+            className="bg-yellow-300 rounded-2xl px-4 py-2 transform rotate-2 hover:rotate-0 transition-transform duration-200"
             style={{
               border: '2px solid rgba(255,255,255,0.4)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
@@ -158,7 +195,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
           </div>
           
           <div 
-            className="bg-pink-300 rounded-2xl px-4 py-2 comic-shadow transform -rotate-3 hover:rotate-0 transition-transform duration-200"
+            className="bg-pink-300 rounded-2xl px-4 py-2 transform -rotate-3 hover:rotate-0 transition-transform duration-200"
             style={{
               border: '2px solid rgba(255,255,255,0.4)',
               boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
