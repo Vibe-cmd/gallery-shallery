@@ -36,6 +36,11 @@ export interface AppTheme {
   primaryColor: string;
   backgroundColor: string;
   accentColor: string;
+  customColors?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+  };
 }
 
 const Index = () => {
@@ -138,8 +143,32 @@ const Index = () => {
     ? homeCustomization.customEmojis 
     : [];
 
+  // Get dynamic styles for custom themes
+  const getDynamicBackgroundStyle = () => {
+    if (appTheme.customColors) {
+      return {
+        background: `linear-gradient(to bottom right, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}10, ${appTheme.customColors.accent}20)`
+      };
+    }
+    return {};
+  };
+
+  const getDynamicButtonStyle = () => {
+    if (appTheme.customColors) {
+      return {
+        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`
+      };
+    }
+    return {};
+  };
+
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${appTheme.primaryColor} relative overflow-hidden transition-all duration-500`}>
+    <div 
+      className={`min-h-screen relative overflow-hidden transition-all duration-500 ${
+        appTheme.customColors ? '' : `bg-gradient-to-br ${appTheme.primaryColor}`
+      }`}
+      style={appTheme.customColors ? getDynamicBackgroundStyle() : {}}
+    >
       {/* Background Image Overlay */}
       {homeCustomization.backgroundImage && (
         <div 
@@ -224,7 +253,10 @@ const Index = () => {
         <div className="text-center mb-8">
           <Button
             onClick={() => setShowCreateModal(true)}
-            className={`bg-gradient-to-r ${appTheme.accentColor} hover:opacity-90 text-white font-bold py-4 px-8 rounded-full text-lg comic-shadow transform hover:scale-105 transition-all duration-200`}
+            className={`text-white font-bold py-4 px-8 rounded-full text-lg comic-shadow transform hover:scale-105 transition-all duration-200 hover:opacity-90 ${
+              appTheme.customColors ? '' : `bg-gradient-to-r ${appTheme.accentColor}`
+            }`}
+            style={appTheme.customColors ? getDynamicButtonStyle() : {}}
           >
             <Plus className="w-6 h-6 mr-2" />
             Create New Album

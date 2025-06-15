@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Photo } from "@/pages/Index";
 import { X, MapPin, Calendar, Heart, Download, Share2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface PhotoDetailModalProps {
   isOpen: boolean;
@@ -11,7 +12,57 @@ interface PhotoDetailModalProps {
 }
 
 export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalProps) => {
+  const { toast } = useToast();
+  
   if (!photo) return null;
+
+  const handleDownload = () => {
+    try {
+      const link = document.createElement('a');
+      link.href = photo.url;
+      link.download = photo.title || 'photo';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast({
+        title: "Download Started",
+        description: "Your photo is being downloaded!",
+      });
+    } catch (error) {
+      toast({
+        title: "Download Failed",
+        description: "There was an error downloading the photo.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: photo.title || 'Check out this photo!',
+          text: photo.backstory || 'Amazing photo from my gallery',
+          url: photo.url,
+        });
+      } else {
+        // Fallback for browsers that don't support Web Share API
+        await navigator.clipboard.writeText(photo.url);
+        toast({
+          title: "Link Copied!",
+          description: "Photo link has been copied to your clipboard.",
+        });
+      }
+    } catch (error) {
+      console.log('Error sharing:', error);
+      toast({
+        title: "Share Failed",
+        description: "There was an error sharing the photo.",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -30,6 +81,7 @@ export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalPro
           {/* Action buttons */}
           <div className="absolute top-4 left-4 z-20 flex gap-2">
             <Button
+              onClick={handleDownload}
               variant="outline"
               size="sm"
               className="rounded-full bg-black/80 backdrop-blur-sm text-white border-white/20 hover:bg-black/90"
@@ -37,6 +89,7 @@ export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalPro
               <Download className="w-4 h-4" />
             </Button>
             <Button
+              onClick={handleShare}
               variant="outline"
               size="sm"
               className="rounded-full bg-black/80 backdrop-blur-sm text-white border-white/20 hover:bg-black/90"

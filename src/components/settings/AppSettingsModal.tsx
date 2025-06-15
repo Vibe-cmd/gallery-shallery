@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -101,17 +100,36 @@ export const AppSettingsModal = ({
     }
   };
 
+  const hexToTailwindColor = (hex: string) => {
+    // Remove the # from hex
+    const cleanHex = hex.replace('#', '');
+    return cleanHex;
+  };
+
   const handleCreateColorTheme = () => {
     if (customThemeName.trim()) {
+      const primaryHex = hexToTailwindColor(customColors.primary);
+      const secondaryHex = hexToTailwindColor(customColors.secondary);
+      const accentHex = hexToTailwindColor(customColors.accent);
+      
       const newTheme: AppTheme = {
         name: customThemeName,
-        primaryColor: `from-[${customColors.primary}20] via-[${customColors.secondary}10] to-[${customColors.accent}20]`,
+        primaryColor: `from-[#${primaryHex}20] via-[#${secondaryHex}10] to-[#${accentHex}20]`,
         backgroundColor: 'bg-white',
-        accentColor: `from-[${customColors.primary}] to-[${customColors.secondary}]`
+        accentColor: `from-[#${primaryHex}] to-[#${secondaryHex}]`,
+        customColors: {
+          primary: customColors.primary,
+          secondary: customColors.secondary,
+          accent: customColors.accent
+        }
       };
-      setCustomThemes([...customThemes, newTheme]);
+      
+      const updatedCustomThemes = [...customThemes, newTheme];
+      setCustomThemes(updatedCustomThemes);
       onThemeChange(newTheme);
       setCustomThemeName("");
+      
+      console.log('Created custom theme:', newTheme);
     }
   };
 
@@ -139,6 +157,24 @@ export const AppSettingsModal = ({
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const getThemePreviewStyle = () => {
+    if (currentTheme.customColors) {
+      return {
+        background: `linear-gradient(to right, ${currentTheme.customColors.primary}20, ${currentTheme.customColors.secondary}10, ${currentTheme.customColors.accent}20)`
+      };
+    }
+    return {};
+  };
+
+  const getAccentPreviewStyle = () => {
+    if (currentTheme.customColors) {
+      return {
+        background: `linear-gradient(to right, ${currentTheme.customColors.primary}, ${currentTheme.customColors.secondary})`
+      };
+    }
+    return {};
   };
 
   return (
@@ -171,7 +207,16 @@ export const AppSettingsModal = ({
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
                   >
-                    <div className={`w-full h-12 rounded-lg mb-2 bg-gradient-to-r ${theme.primaryColor}`}></div>
+                    <div 
+                      className={`w-full h-12 rounded-lg mb-2 ${
+                        theme.customColors 
+                          ? '' 
+                          : `bg-gradient-to-r ${theme.primaryColor}`
+                      }`}
+                      style={theme.customColors ? {
+                        background: `linear-gradient(to right, ${theme.customColors.primary}20, ${theme.customColors.secondary}10, ${theme.customColors.accent}20)`
+                      } : {}}
+                    ></div>
                     <div className="font-bold text-sm">{theme.name}</div>
                   </button>
                 ))}
@@ -223,9 +268,9 @@ export const AppSettingsModal = ({
                   </div>
                 </div>
                 
-                {/* Preview */}
+                {/* Live Preview */}
                 <div className="p-4 rounded-xl border-2 border-gray-300">
-                  <Label className="text-sm font-medium mb-2 block">Theme Preview</Label>
+                  <Label className="text-sm font-medium mb-2 block">Live Theme Preview</Label>
                   <div 
                     className="w-full h-16 rounded-lg mb-3"
                     style={{
