@@ -21,25 +21,10 @@ export const ComicHeader = ({
     return titleStyle;
   };
   const getTitleBackgroundStyle = () => {
-    if (appTheme?.customColors) {
-      return {
-        background: `linear-gradient(135deg, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}30, ${appTheme.customColors.accent}20)`,
-        backdropFilter: 'blur(10px)',
-        border: '2px solid rgba(255,255,255,0.18)',
-        borderRadius: '30px',
-        padding: '25px 40px 50px 40px',
-        // Increased bottom padding even more for descenders
-        boxShadow: '0 8px 32px rgba(0,0,0,0.10)'
-      };
-    }
+    // Make completely transparent in all themes
     return {
-      background: 'rgba(255,255,255,0.92)',
-      backdropFilter: 'blur(10px)',
-      border: '2px solid rgba(255,255,255,0.3)',
-      borderRadius: '30px',
       padding: '25px 40px 50px 40px',
       // Increased bottom padding even more for descenders
-      boxShadow: '0 8px 32px rgba(0,0,0,0.07)'
     };
   };
   const getSubtitleStyle = () => {
