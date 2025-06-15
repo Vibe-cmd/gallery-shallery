@@ -28,19 +28,19 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
       return {
         background: `linear-gradient(135deg, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}30, ${appTheme.customColors.accent}20)`,
         backdropFilter: 'blur(10px)',
-        border: '2px solid rgba(255,255,255,0.18)', // softer, subtle border
+        border: '2px solid rgba(255,255,255,0.18)',
         borderRadius: '30px',
         padding: '20px 40px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.10)', // softer shadow
+        boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
       };
     }
     return {
       background: 'rgba(255,255,255,0.92)',
       backdropFilter: 'blur(10px)',
-      border: '2px solid rgba(0,0,0,0.06)', // lighter black
+      border: '2px solid rgba(255,255,255,0.3)',
       borderRadius: '30px',
       padding: '20px 40px',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.07)' // lighter shadow
+      boxShadow: '0 8px 32px rgba(0,0,0,0.07)'
     };
   };
 
@@ -136,8 +136,12 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
               appTheme?.customColors 
                 ? '' 
                 : 'bg-white'
-            } rounded-2xl px-6 py-3 border-4 border-black comic-shadow transform -rotate-1 hover:rotate-0 transition-transform duration-200`}
-            style={appTheme?.customColors ? getBubbleBackgroundStyle() : {}}
+            } rounded-2xl px-6 py-3 comic-shadow transform -rotate-1 hover:rotate-0 transition-transform duration-200`}
+            style={{
+              ...(appTheme?.customColors ? getBubbleBackgroundStyle() : {}),
+              border: '2px solid rgba(255,255,255,0.4)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            }}
           >
             <p 
               className={`text-xl font-bold ${getBubbleTextColor()}`} 
@@ -147,11 +151,23 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
             </p>
           </div>
           
-          <div className="bg-yellow-300 rounded-2xl px-4 py-2 border-4 border-black comic-shadow transform rotate-2 hover:rotate-0 transition-transform duration-200">
+          <div 
+            className="bg-yellow-300 rounded-2xl px-4 py-2 comic-shadow transform rotate-2 hover:rotate-0 transition-transform duration-200"
+            style={{
+              border: '2px solid rgba(255,255,255,0.4)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            }}
+          >
             <p className="font-bold text-lg">📸</p>
           </div>
           
-          <div className="bg-pink-300 rounded-2xl px-4 py-2 border-4 border-black comic-shadow transform -rotate-3 hover:rotate-0 transition-transform duration-200">
+          <div 
+            className="bg-pink-300 rounded-2xl px-4 py-2 comic-shadow transform -rotate-3 hover:rotate-0 transition-transform duration-200"
+            style={{
+              border: '2px solid rgba(255,255,255,0.4)',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+            }}
+          >
             <p className="font-bold text-lg">🎨</p>
           </div>
         </div>
