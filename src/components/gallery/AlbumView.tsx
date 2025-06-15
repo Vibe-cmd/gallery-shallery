@@ -111,7 +111,7 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
     
     switch (album.layout) {
       case 'polaroid':
-        return `${baseClasses} p-3 pb-6 transform ${index % 2 === 0 ? 'rotate-2' : '-rotate-2'} hover:rotate-0 shadow-lg w-48 h-60`;
+        return `${baseClasses} p-3 pb-6 transform ${index % 2 === 0 ? 'rotate-2' : '-rotate-2'} hover:rotate-0 shadow-lg w-58 h-72`;
       case 'timeline':
         return `${baseClasses} p-6 flex ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'} items-center gap-6`;
       case 'magazine':
@@ -128,7 +128,7 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
   const getImageClasses = (index: number) => {
     switch (album.layout) {
       case 'polaroid':
-        return "w-full h-32 object-cover rounded-lg";
+        return "w-full h-40 object-cover rounded-lg";
       case 'timeline':
         return "w-32 h-32 object-cover rounded-xl";
       case 'magazine':
@@ -167,6 +167,23 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
       );
     }
 
+    if (album.layout === 'polaroid') {
+      return (
+        <>
+          <div className="bg-gray-200 rounded-xl mb-3 flex items-center justify-center overflow-hidden aspect-square">
+            <img 
+              src={photo.url} 
+              alt={photo.title || 'Photo'}
+              className={getImageClasses(index)}
+            />
+          </div>
+          <p className="text-center text-sm text-gray-600 mt-2 font-handwritten">
+            {photo.title || 'Memory'}
+          </p>
+        </>
+      );
+    }
+
     return (
       <>
         <div className={`bg-gray-200 rounded-xl mb-3 flex items-center justify-center overflow-hidden ${album.layout === 'magazine' && index === 0 ? '' : 'aspect-square'}`}>
@@ -181,11 +198,6 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
         )}
         {photo.location && (
           <p className="text-sm text-gray-600">📍 {photo.location}</p>
-        )}
-        {album.layout === 'polaroid' && (
-          <p className="text-center text-sm text-gray-600 mt-2 font-handwritten">
-            {photo.title || 'Memory'}
-          </p>
         )}
       </>
     );
