@@ -1,4 +1,3 @@
-
 import { AppTheme } from "@/pages/Index";
 
 interface ComicHeaderProps {
@@ -29,19 +28,19 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
       return {
         background: `linear-gradient(135deg, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}30, ${appTheme.customColors.accent}20)`,
         backdropFilter: 'blur(10px)',
-        border: '2px solid rgba(255,255,255,0.3)',
+        border: '2px solid rgba(255,255,255,0.18)', // softer, subtle border
         borderRadius: '30px',
         padding: '20px 40px',
-        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+        boxShadow: '0 8px 32px rgba(0,0,0,0.10)', // softer shadow
       };
     }
     return {
-      background: 'rgba(255,255,255,0.9)',
+      background: 'rgba(255,255,255,0.92)',
       backdropFilter: 'blur(10px)',
-      border: '2px solid rgba(0,0,0,0.1)',
+      border: '2px solid rgba(0,0,0,0.06)', // lighter black
       borderRadius: '30px',
       padding: '20px 40px',
-      boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+      boxShadow: '0 8px 32px rgba(0,0,0,0.07)' // lighter shadow
     };
   };
 

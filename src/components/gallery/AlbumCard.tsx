@@ -1,4 +1,3 @@
-
 import { Album } from "@/pages/Index";
 import { Camera, Map, Heart, Tag } from "lucide-react";
 
@@ -46,7 +45,9 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
       onClick={onClick}
       style={cardStyle}
     >
-      <div className={`rounded-3xl p-6 border-4 border-black ${themeStyles[album.theme]} min-h-[250px] relative overflow-hidden`}>
+      <div 
+        className={`rounded-3xl p-6 border-4 border-[rgba(0,0,0,0.08)] ${themeStyles[album.theme]} min-h-[250px] relative overflow-hidden`}
+      >
         {/* Decorative elements - positioned within rounded area with proper clipping */}
         <div className="absolute top-4 right-4 text-2xl opacity-50 z-10">
           {album.theme === 'comic-noir' && '🖤'}
@@ -86,15 +87,15 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
 
         {/* Hover effect */}
         <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl flex items-center justify-center z-30">
-          <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 font-bold text-gray-800 border-2 border-black comic-shadow">
+          <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 font-bold text-gray-800 border-2 border-[rgba(0,0,0,0.08)] comic-shadow">
             OPEN
           </div>
         </div>
 
-        {/* Comic-style decorations - properly positioned within rounded corners with clipping */}
-        <div className="absolute top-8 right-8 w-6 h-6 bg-yellow-400 rounded-full border-2 border-black transform rotate-45 z-10"></div>
-        <div className="absolute bottom-8 right-12 w-3 h-3 bg-red-400 rounded-full border-2 border-black z-10"></div>
-        <div className="absolute top-1/2 left-6 w-2 h-2 bg-blue-400 rounded-full border border-black z-10"></div>
+        {/* Comic-style decorations - softer border for circles */}
+        <div className="absolute top-8 right-8 w-6 h-6 bg-yellow-400 rounded-full border-2 border-[rgba(0,0,0,0.08)] transform rotate-45 z-10"></div>
+        <div className="absolute bottom-8 right-12 w-3 h-3 bg-red-400 rounded-full border-2 border-[rgba(0,0,0,0.08)] z-10"></div>
+        <div className="absolute top-1/2 left-6 w-2 h-2 bg-blue-400 rounded-full border border-[rgba(0,0,0,0.08)] z-10"></div>
       </div>
     </div>
   );
