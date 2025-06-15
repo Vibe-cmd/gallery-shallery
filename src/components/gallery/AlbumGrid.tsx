@@ -5,9 +5,10 @@ import { AlbumCard } from "./AlbumCard";
 interface AlbumGridProps {
   albums: Album[];
   onAlbumClick: (album: Album) => void;
+  onToggleFavorite: (albumId: string) => void;
 }
 
-export const AlbumGrid = ({ albums, onAlbumClick }: AlbumGridProps) => {
+export const AlbumGrid = ({ albums, onAlbumClick, onToggleFavorite }: AlbumGridProps) => {
   if (albums.length === 0) {
     return (
       <div className="text-center py-16">
@@ -26,6 +27,7 @@ export const AlbumGrid = ({ albums, onAlbumClick }: AlbumGridProps) => {
           album={album} 
           index={index}
           onClick={() => onAlbumClick(album)}
+          onToggleFavorite={onToggleFavorite}
         />
       ))}
     </div>
