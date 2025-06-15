@@ -82,7 +82,7 @@ export const AlbumCard = ({ album, index, onClick, onToggleFavorite }: AlbumCard
         {/* Favorite Heart Icon */}
         <button
           onClick={handleFavoriteClick}
-          className="absolute top-2 right-2 z-30 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-200"
+          className="absolute top-2 right-2 z-40 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-200"
         >
           <Heart 
             className={`w-5 h-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-white/70'} transition-all duration-200`}
