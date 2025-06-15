@@ -40,46 +40,55 @@ export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalPro
 
   const handleShare = async () => {
     try {
-      // First try the Web Share API
-      if (navigator.share && navigator.canShare) {
-        const shareData = {
+      // Check if Web Share API is supported
+      if (navigator.share) {
+        await navigator.share({
           title: photo.title || 'Check out this photo!',
           text: photo.backstory || 'Amazing photo from my gallery',
-          url: photo.url,
-        };
+          url: window.location.href,
+        });
         
-        if (navigator.canShare(shareData)) {
-          await navigator.share(shareData);
-          return;
-        }
+        toast({
+          title: "Shared Successfully!",
+          description: "Photo has been shared.",
+        });
+        return;
       }
       
       // Fallback to clipboard
-      await navigator.clipboard.writeText(photo.url);
+      await navigator.clipboard.writeText(window.location.href);
       toast({
         title: "Link Copied!",
         description: "Photo link has been copied to your clipboard.",
       });
+      
     } catch (error) {
       console.error('Share error:', error);
       
-      // Final fallback - try to copy manually
+      // Final fallback - manual copy
       try {
         const textArea = document.createElement('textarea');
-        textArea.value = photo.url;
+        textArea.value = window.location.href;
+        textArea.style.position = 'fixed';
+        textArea.style.opacity = '0';
         document.body.appendChild(textArea);
+        textArea.focus();
         textArea.select();
-        document.execCommand('copy');
+        const successful = document.execCommand('copy');
         document.body.removeChild(textArea);
         
-        toast({
-          title: "Link Copied!",
-          description: "Photo link has been copied to your clipboard.",
-        });
+        if (successful) {
+          toast({
+            title: "Link Copied!",
+            description: "Photo link has been copied to your clipboard.",
+          });
+        } else {
+          throw new Error('Copy command failed');
+        }
       } catch (fallbackError) {
         toast({
           title: "Share Failed",
-          description: "Unable to share or copy the photo link.",
+          description: "Unable to share or copy the photo link. Your browser may not support this feature.",
           variant: "destructive",
         });
       }

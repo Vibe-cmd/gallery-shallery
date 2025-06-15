@@ -47,7 +47,7 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
       style={cardStyle}
     >
       <div className={`rounded-3xl p-6 border-4 border-black ${themeStyles[album.theme]} min-h-[250px] relative overflow-hidden`}>
-        {/* Decorative elements - positioned within rounded area */}
+        {/* Decorative elements - positioned within rounded area with proper clipping */}
         <div className="absolute top-4 right-4 text-2xl opacity-50 z-10">
           {album.theme === 'comic-noir' && '🖤'}
           {album.theme === 'pastel-doodle' && '🌸'}
@@ -91,10 +91,10 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
           </div>
         </div>
 
-        {/* Comic-style decorations - properly positioned within rounded corners */}
-        <div className="absolute top-6 right-6 w-6 h-6 bg-yellow-400 rounded-full border-2 border-black transform rotate-45 z-10"></div>
-        <div className="absolute bottom-6 right-10 w-3 h-3 bg-red-400 rounded-full border-2 border-black z-10"></div>
-        <div className="absolute top-1/2 left-4 w-2 h-2 bg-blue-400 rounded-full border border-black z-10"></div>
+        {/* Comic-style decorations - properly positioned within rounded corners with clipping */}
+        <div className="absolute top-8 right-8 w-6 h-6 bg-yellow-400 rounded-full border-2 border-black transform rotate-45 z-10"></div>
+        <div className="absolute bottom-8 right-12 w-3 h-3 bg-red-400 rounded-full border-2 border-black z-10"></div>
+        <div className="absolute top-1/2 left-6 w-2 h-2 bg-blue-400 rounded-full border border-black z-10"></div>
       </div>
     </div>
   );

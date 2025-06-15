@@ -19,12 +19,13 @@ export const PhotoReviewModal = ({ isOpen, onClose, photoUrl, fileName, onSavePh
   const [title, setTitle] = useState(fileName.split('.')[0]);
   const [location, setLocation] = useState("");
   const [backstory, setBackstory] = useState("");
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
 
   const handleSave = () => {
     const photo: Omit<Photo, 'id'> = {
       url: photoUrl,
       title: title.trim() || fileName.split('.')[0],
-      date: new Date(),
+      date: new Date(selectedDate),
       location: location.trim() || undefined,
       backstory: backstory.trim() || undefined,
       stickers: []
@@ -35,6 +36,7 @@ export const PhotoReviewModal = ({ isOpen, onClose, photoUrl, fileName, onSavePh
     setTitle(fileName.split('.')[0]);
     setLocation("");
     setBackstory("");
+    setSelectedDate(new Date().toISOString().split('T')[0]);
   };
 
   const handleClose = () => {
@@ -43,6 +45,7 @@ export const PhotoReviewModal = ({ isOpen, onClose, photoUrl, fileName, onSavePh
     setTitle(fileName.split('.')[0]);
     setLocation("");
     setBackstory("");
+    setSelectedDate(new Date().toISOString().split('T')[0]);
   };
 
   return (
@@ -74,6 +77,16 @@ export const PhotoReviewModal = ({ isOpen, onClose, photoUrl, fileName, onSavePh
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Give your photo a title..."
+                className="border-2 border-black rounded-xl comic-shadow"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm font-bold mb-2 block">Date</Label>
+              <Input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
                 className="border-2 border-black rounded-xl comic-shadow"
               />
             </div>

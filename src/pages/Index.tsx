@@ -166,6 +166,24 @@ const Index = () => {
     if (customFont) {
       return { fontFamily: customFont };
     }
+    if (appTheme.customColors) {
+      return {
+        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text'
+      };
+    }
+    return {};
+  };
+
+  const getCategoryButtonStyle = (isSelected: boolean, categoryColor: string) => {
+    if (appTheme.customColors && isSelected) {
+      return {
+        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
+        color: 'white'
+      };
+    }
     return {};
   };
 
@@ -240,6 +258,7 @@ const Index = () => {
             variant={selectedCategory === null ? "default" : "outline"}
             onClick={() => setSelectedCategory(null)}
             className="rounded-full font-bold comic-shadow transition-all duration-200"
+            style={appTheme.customColors && selectedCategory === null ? getDynamicButtonStyle() : {}}
           >
             All Albums
           </Button>
@@ -249,8 +268,9 @@ const Index = () => {
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
               className={`rounded-full font-bold comic-shadow flex items-center gap-2 transition-all duration-200 ${
-                selectedCategory === category.id ? category.color : ''
+                selectedCategory === category.id && !appTheme.customColors ? category.color : ''
               }`}
+              style={getCategoryButtonStyle(selectedCategory === category.id, category.color)}
             >
               <category.icon className="w-4 h-4" />
               {category.name}
