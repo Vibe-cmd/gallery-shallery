@@ -26,7 +26,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
         backdropFilter: 'blur(10px)',
         border: '2px solid rgba(255,255,255,0.18)',
         borderRadius: '30px',
-        padding: '20px 40px',
+        padding: '25px 40px 35px 40px', // Increased bottom padding for descenders
         boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
       };
     }
@@ -35,7 +35,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
       backdropFilter: 'blur(10px)',
       border: '2px solid rgba(255,255,255,0.3)',
       borderRadius: '30px',
-      padding: '20px 40px',
+      padding: '25px 40px 35px 40px', // Increased bottom padding for descenders
       boxShadow: '0 8px 32px rgba(0,0,0,0.07)'
     };
   };
@@ -73,9 +73,9 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
 
   const getTitleClasses = () => {
     if (appTheme?.customColors) {
-      return 'text-4xl md:text-5xl font-black transform hover:scale-105 transition-transform duration-300';
+      return 'text-5xl md:text-7xl font-black transform hover:scale-105 transition-transform duration-300';
     }
-    return 'text-4xl md:text-5xl font-black text-transparent bg-clip-text transform hover:scale-105 transition-transform duration-300';
+    return 'text-5xl md:text-7xl font-black text-transparent bg-clip-text transform hover:scale-105 transition-transform duration-300';
   };
 
   const getTitleGradientStyle = () => {
@@ -154,7 +154,8 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
             className={getTitleClasses()}
             style={{
               ...getTitleTextStyle(),
-              ...getTitleGradientStyle()
+              ...getTitleGradientStyle(),
+              lineHeight: '1.1' // Tighter line height to fit better in container
             }}
           >
             Gallery Shallery
