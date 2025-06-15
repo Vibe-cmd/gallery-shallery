@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Slider } from "@/components/ui/slider";
 import { AppTheme } from "@/pages/Index";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -38,20 +37,15 @@ export const AppSettingsModal = ({
   onFontChange
 }: AppSettingsModalProps) => {
   const [customGoogleFont, setCustomGoogleFont] = useState("");
-  const [customTheme, setCustomTheme] = useState({
-    name: "",
-    primaryColor: "from-blue-100 via-purple-50 to-pink-100",
-    backgroundColor: "bg-white",
-    accentColor: "from-blue-500 to-purple-500"
-  });
   const [customThemes, setCustomThemes] = useState<AppTheme[]>([]);
   
-  // Color picker states
+  // Color picker states for custom theme
   const [customColors, setCustomColors] = useState({
     primary: "#3B82F6",
     secondary: "#8B5CF6",
     accent: "#EC4899"
   });
+  const [customThemeName, setCustomThemeName] = useState("");
   
   // Home customization states
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(homeCustomization.backgroundImage || "");
@@ -107,31 +101,18 @@ export const AppSettingsModal = ({
     }
   };
 
-  const handleCreateCustomTheme = () => {
-    if (customTheme.name.trim()) {
+  const handleCreateColorTheme = () => {
+    if (customThemeName.trim()) {
       const newTheme: AppTheme = {
-        ...customTheme,
-        name: customTheme.name.trim()
+        name: customThemeName,
+        primaryColor: `from-[${customColors.primary}20] via-[${customColors.secondary}10] to-[${customColors.accent}20]`,
+        backgroundColor: 'bg-white',
+        accentColor: `from-[${customColors.primary}] to-[${customColors.secondary}]`
       };
       setCustomThemes([...customThemes, newTheme]);
-      setCustomTheme({
-        name: "",
-        primaryColor: "from-blue-100 via-purple-50 to-pink-100",
-        backgroundColor: "bg-white",
-        accentColor: "from-blue-500 to-purple-500"
-      });
+      onThemeChange(newTheme);
+      setCustomThemeName("");
     }
-  };
-
-  const handleCreateColorTheme = () => {
-    const themeName = `Custom ${Date.now()}`;
-    const newTheme: AppTheme = {
-      name: themeName,
-      primaryColor: `from-[${customColors.primary}20] via-[${customColors.secondary}10] to-[${customColors.accent}20]`,
-      backgroundColor: 'bg-white',
-      accentColor: `from-[${customColors.primary}] to-[${customColors.secondary}]`
-    };
-    setCustomThemes([...customThemes, newTheme]);
   };
 
   const handleHomeCustomizationUpdate = (updates: Partial<HomeCustomization>) => {
@@ -147,23 +128,18 @@ export const AppSettingsModal = ({
     }
   };
 
-  const gradientOptions = [
-    { name: "Blue Purple", value: "from-blue-100 via-purple-50 to-pink-100" },
-    { name: "Green Teal", value: "from-green-100 via-emerald-50 to-teal-100" },
-    { name: "Orange Red", value: "from-orange-100 via-red-50 to-pink-100" },
-    { name: "Purple Pink", value: "from-purple-100 via-pink-50 to-rose-100" },
-    { name: "Dark Theme", value: "from-gray-900 via-purple-900 to-black" },
-    { name: "Yellow Orange", value: "from-yellow-100 via-orange-50 to-red-100" }
-  ];
-
-  const accentOptions = [
-    { name: "Blue Purple", value: "from-blue-500 to-purple-500" },
-    { name: "Green Teal", value: "from-green-500 to-emerald-500" },
-    { name: "Orange Red", value: "from-orange-500 to-red-500" },
-    { name: "Purple Pink", value: "from-purple-500 to-pink-500" },
-    { name: "Pink Red", value: "from-pink-500 to-red-500" },
-    { name: "Cyan Blue", value: "from-cyan-500 to-blue-500" }
-  ];
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const imageUrl = e.target?.result as string;
+        handleHomeCustomizationUpdate({ backgroundImage: imageUrl });
+        setBackgroundImageUrl(imageUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -175,13 +151,12 @@ export const AppSettingsModal = ({
         <Tabs defaultValue="themes" className="w-full">
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="themes">Themes</TabsTrigger>
-            <TabsTrigger value="colors">Color Picker</TabsTrigger>
+            <TabsTrigger value="custom">Build Custom Theme</TabsTrigger>
             <TabsTrigger value="home">Home Screen</TabsTrigger>
             <TabsTrigger value="fonts">Fonts</TabsTrigger>
           </TabsList>
 
           <TabsContent value="themes" className="space-y-6">
-            {/* Theme Selection */}
             <div>
               <Label className="text-lg font-bold mb-3 block">App Theme</Label>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -202,120 +177,77 @@ export const AppSettingsModal = ({
                 ))}
               </div>
             </div>
+          </TabsContent>
 
-            {/* Custom Theme Creator */}
-            <div className="border-t pt-6">
-              <Label className="text-lg font-bold mb-3 block">Create Custom Theme</Label>
-              <div className="space-y-4">
+          <TabsContent value="custom" className="space-y-6">
+            <div>
+              <Label className="text-lg font-bold mb-4 block">Build Custom Theme</Label>
+              
+              <div className="space-y-6">
                 <div>
-                  <Label className="text-sm font-medium">Theme Name</Label>
+                  <Label className="text-sm font-medium mb-2 block">Theme Name</Label>
                   <Input
-                    value={customTheme.name}
-                    onChange={(e) => setCustomTheme({...customTheme, name: e.target.value})}
+                    value={customThemeName}
+                    onChange={(e) => setCustomThemeName(e.target.value)}
                     placeholder="My Awesome Theme"
-                    className="mt-1"
                   />
                 </div>
-                
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Background Gradient</Label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {gradientOptions.map((gradient) => (
-                      <button
-                        key={gradient.name}
-                        type="button"
-                        onClick={() => setCustomTheme({...customTheme, primaryColor: gradient.value})}
-                        className={`p-3 rounded-lg border-2 ${
-                          customTheme.primaryColor === gradient.value ? 'border-purple-500' : 'border-gray-300'
-                        }`}
-                      >
-                        <div className={`w-full h-8 rounded bg-gradient-to-r ${gradient.value} mb-1`}></div>
-                        <div className="text-xs font-medium">{gradient.name}</div>
-                      </button>
-                    ))}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">Primary Color</Label>
+                    <Input
+                      type="color"
+                      value={customColors.primary}
+                      onChange={(e) => setCustomColors({...customColors, primary: e.target.value})}
+                      className="h-12 w-full"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">Secondary Color</Label>
+                    <Input
+                      type="color"
+                      value={customColors.secondary}
+                      onChange={(e) => setCustomColors({...customColors, secondary: e.target.value})}
+                      className="h-12 w-full"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">Accent Color</Label>
+                    <Input
+                      type="color"
+                      value={customColors.accent}
+                      onChange={(e) => setCustomColors({...customColors, accent: e.target.value})}
+                      className="h-12 w-full"
+                    />
                   </div>
                 </div>
-
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Accent Color</Label>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                    {accentOptions.map((accent) => (
-                      <button
-                        key={accent.name}
-                        type="button"
-                        onClick={() => setCustomTheme({...customTheme, accentColor: accent.value})}
-                        className={`p-3 rounded-lg border-2 ${
-                          customTheme.accentColor === accent.value ? 'border-purple-500' : 'border-gray-300'
-                        }`}
-                      >
-                        <div className={`w-full h-8 rounded bg-gradient-to-r ${accent.value} mb-1`}></div>
-                        <div className="text-xs font-medium">{accent.name}</div>
-                      </button>
-                    ))}
-                  </div>
+                
+                {/* Preview */}
+                <div className="p-4 rounded-xl border-2 border-gray-300">
+                  <Label className="text-sm font-medium mb-2 block">Theme Preview</Label>
+                  <div 
+                    className="w-full h-16 rounded-lg mb-3"
+                    style={{
+                      background: `linear-gradient(to right, ${customColors.primary}20, ${customColors.secondary}10, ${customColors.accent}20)`
+                    }}
+                  ></div>
+                  <div 
+                    className="w-32 h-8 rounded-lg"
+                    style={{
+                      background: `linear-gradient(to right, ${customColors.primary}, ${customColors.secondary})`
+                    }}
+                  ></div>
                 </div>
 
                 <Button
-                  onClick={handleCreateCustomTheme}
-                  disabled={!customTheme.name.trim()}
-                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+                  onClick={handleCreateColorTheme}
+                  disabled={!customThemeName.trim()}
+                  className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
                 >
-                  Create Custom Theme 🎨
+                  Create and Apply Theme 🎨
                 </Button>
               </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="colors" className="space-y-6">
-            <div>
-              <Label className="text-lg font-bold mb-4 block">Create Theme with Color Picker</Label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Primary Color</Label>
-                  <Input
-                    type="color"
-                    value={customColors.primary}
-                    onChange={(e) => setCustomColors({...customColors, primary: e.target.value})}
-                    className="h-12 w-full"
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Secondary Color</Label>
-                  <Input
-                    type="color"
-                    value={customColors.secondary}
-                    onChange={(e) => setCustomColors({...customColors, secondary: e.target.value})}
-                    className="h-12 w-full"
-                  />
-                </div>
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Accent Color</Label>
-                  <Input
-                    type="color"
-                    value={customColors.accent}
-                    onChange={(e) => setCustomColors({...customColors, accent: e.target.value})}
-                    className="h-12 w-full"
-                  />
-                </div>
-              </div>
-              
-              {/* Preview */}
-              <div className="mt-4 p-4 rounded-xl border-2 border-gray-300">
-                <Label className="text-sm font-medium mb-2 block">Preview</Label>
-                <div 
-                  className="w-full h-16 rounded-lg"
-                  style={{
-                    background: `linear-gradient(to right, ${customColors.primary}20, ${customColors.secondary}10, ${customColors.accent}20)`
-                  }}
-                ></div>
-              </div>
-
-              <Button
-                onClick={handleCreateColorTheme}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600"
-              >
-                Create Theme from Colors 🎨
-              </Button>
             </div>
           </TabsContent>
 
@@ -323,27 +255,37 @@ export const AppSettingsModal = ({
             <div>
               <Label className="text-lg font-bold mb-4 block">Home Screen Customization</Label>
               
-              {/* Background Image */}
               <div className="space-y-4">
                 <div>
-                  <Label className="text-sm font-medium mb-2 block">Background Image URL</Label>
-                  <Input
-                    value={backgroundImageUrl}
-                    onChange={(e) => setBackgroundImageUrl(e.target.value)}
-                    placeholder="https://images.unsplash.com/your-image-url"
-                    className="mb-2"
-                  />
-                  <Button
-                    onClick={() => handleHomeCustomizationUpdate({ backgroundImage: backgroundImageUrl })}
-                    disabled={!backgroundImageUrl.trim()}
-                    variant="outline"
-                    size="sm"
-                  >
-                    Apply Background
-                  </Button>
+                  <Label className="text-sm font-medium mb-2 block">Background Image</Label>
+                  <div className="space-y-3">
+                    <Input
+                      value={backgroundImageUrl}
+                      onChange={(e) => setBackgroundImageUrl(e.target.value)}
+                      placeholder="https://images.unsplash.com/your-image-url"
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => handleHomeCustomizationUpdate({ backgroundImage: backgroundImageUrl })}
+                        disabled={!backgroundImageUrl.trim()}
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                      >
+                        Apply URL
+                      </Button>
+                      <div className="flex-1">
+                        <Input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Blur Intensity */}
                 <div>
                   <Label className="text-sm font-medium mb-2 block">
                     Background Blur Intensity: {blurValue[0]}px
@@ -361,7 +303,6 @@ export const AppSettingsModal = ({
                   />
                 </div>
 
-                {/* Custom Emojis */}
                 <div>
                   <Label className="text-sm font-medium mb-2 block">Custom Decorative Emojis</Label>
                   <div className="flex gap-2 mb-2">
@@ -399,7 +340,6 @@ export const AppSettingsModal = ({
                   )}
                 </div>
 
-                {/* Show Decorations Toggle */}
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -414,7 +354,6 @@ export const AppSettingsModal = ({
           </TabsContent>
 
           <TabsContent value="fonts" className="space-y-6">
-            {/* Google Fonts */}
             <div>
               <Label className="text-lg font-bold mb-3 block">Add Google Font</Label>
               <div className="flex gap-3">
@@ -447,7 +386,6 @@ export const AppSettingsModal = ({
           </TabsContent>
         </Tabs>
 
-        {/* Close Button */}
         <div className="flex justify-end pt-4">
           <Button
             onClick={onClose}

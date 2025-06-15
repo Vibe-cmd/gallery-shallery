@@ -2,7 +2,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Photo } from "@/pages/Index";
-import { X, MapPin, Calendar, Heart } from "lucide-react";
+import { X, MapPin, Calendar, Heart, Download, Share2 } from "lucide-react";
 
 interface PhotoDetailModalProps {
   isOpen: boolean;
@@ -15,70 +15,160 @@ export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalPro
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto p-0">
-        <div className="relative">
+      <DialogContent className="max-w-6xl max-h-[95vh] overflow-hidden p-0 bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="relative h-full">
           {/* Close button */}
           <Button
             onClick={onClose}
             variant="outline"
             size="sm"
-            className="absolute top-4 right-4 z-10 rounded-full bg-white/90 backdrop-blur-sm"
+            className="absolute top-4 right-4 z-20 rounded-full bg-black/80 backdrop-blur-sm text-white border-white/20 hover:bg-black/90"
           >
             <X className="w-4 h-4" />
           </Button>
 
-          {/* Photo */}
-          <div className="w-full max-h-[60vh] bg-gray-100 flex items-center justify-center overflow-hidden">
-            <img 
-              src={photo.url} 
-              alt={photo.title || 'Photo'}
-              className="w-full h-full object-contain"
-            />
+          {/* Action buttons */}
+          <div className="absolute top-4 left-4 z-20 flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full bg-black/80 backdrop-blur-sm text-white border-white/20 hover:bg-black/90"
+            >
+              <Download className="w-4 h-4" />
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="rounded-full bg-black/80 backdrop-blur-sm text-white border-white/20 hover:bg-black/90"
+            >
+              <Share2 className="w-4 h-4" />
+            </Button>
           </div>
 
-          {/* Photo details */}
-          <div className="p-6 space-y-4">
-            {photo.title && (
-              <DialogHeader>
-                <DialogTitle className="text-3xl font-bold text-gray-800">
-                  {photo.title}
-                </DialogTitle>
-              </DialogHeader>
-            )}
-
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-              {photo.date && (
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  <span>{photo.date.toLocaleDateString()}</span>
-                </div>
-              )}
+          <div className="grid grid-cols-1 lg:grid-cols-3 h-full min-h-[600px]">
+            {/* Photo Section */}
+            <div className="lg:col-span-2 relative bg-black flex items-center justify-center overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10"></div>
+              <img 
+                src={photo.url} 
+                alt={photo.title || 'Photo'}
+                className="w-full h-full object-contain transition-transform duration-300 hover:scale-105"
+              />
               
-              {photo.location && (
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  <span>{photo.location}</span>
+              {/* Photo overlay info */}
+              {photo.title && (
+                <div className="absolute bottom-6 left-6 right-6 z-20">
+                  <h2 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">
+                    {photo.title}
+                  </h2>
+                  <div className="flex flex-wrap gap-4 text-white/90">
+                    {photo.date && (
+                      <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1">
+                        <Calendar className="w-4 h-4" />
+                        <span className="text-sm">{photo.date.toLocaleDateString()}</span>
+                      </div>
+                    )}
+                    
+                    {photo.location && (
+                      <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm rounded-full px-3 py-1">
+                        <MapPin className="w-4 h-4" />
+                        <span className="text-sm">{photo.location}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>
 
-            {photo.backstory && (
-              <div className="bg-gray-50 rounded-xl p-4 border-2 border-gray-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <Heart className="w-4 h-4 text-red-500" />
-                  <span className="font-semibold text-gray-700">Story</span>
+            {/* Details Section */}
+            <div className="bg-white p-6 overflow-y-auto space-y-6">
+              {photo.title && (
+                <div>
+                  <DialogHeader>
+                    <DialogTitle className="text-2xl font-bold text-gray-800 mb-2">
+                      {photo.title}
+                    </DialogTitle>
+                  </DialogHeader>
                 </div>
-                <p className="text-gray-700 leading-relaxed">{photo.backstory}</p>
-              </div>
-            )}
+              )}
 
-            {photo.stickers && photo.stickers.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {photo.stickers.map((sticker, index) => (
-                  <span key={index} className="text-2xl">{sticker}</span>
-                ))}
+              {/* Metadata */}
+              <div className="space-y-3">
+                {photo.date && (
+                  <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
+                    <div className="bg-blue-500 p-2 rounded-full">
+                      <Calendar className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Date</p>
+                      <p className="font-medium text-gray-800">{photo.date.toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                )}
+                
+                {photo.location && (
+                  <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
+                    <div className="bg-green-500 p-2 rounded-full">
+                      <MapPin className="w-4 h-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Location</p>
+                      <p className="font-medium text-gray-800">{photo.location}</p>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
+
+              {/* Backstory */}
+              {photo.backstory && (
+                <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-xl p-6 border border-pink-200">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="bg-gradient-to-r from-pink-500 to-purple-500 p-2 rounded-full">
+                      <Heart className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="font-bold text-gray-800 text-lg">Story Behind the Photo</span>
+                  </div>
+                  <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 border border-white/50">
+                    <p className="text-gray-700 leading-relaxed italic">"{photo.backstory}"</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Stickers */}
+              {photo.stickers && photo.stickers.length > 0 && (
+                <div className="bg-yellow-50 rounded-xl p-4 border border-yellow-200">
+                  <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>✨</span>
+                    Decorations
+                  </h4>
+                  <div className="flex flex-wrap gap-3">
+                    {photo.stickers.map((sticker, index) => (
+                      <div 
+                        key={index} 
+                        className="text-3xl bg-white rounded-full p-2 shadow-md hover:scale-110 transition-transform cursor-pointer"
+                      >
+                        {sticker}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Photo Stats */}
+              <div className="bg-gray-50 rounded-lg p-4 border-l-4 border-blue-500">
+                <h4 className="font-bold text-gray-800 mb-2">Photo Details</h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p className="text-gray-600">Added on</p>
+                    <p className="font-medium">{new Date().toLocaleDateString()}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-600">Decorations</p>
+                    <p className="font-medium">{photo.stickers?.length || 0} items</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </DialogContent>
