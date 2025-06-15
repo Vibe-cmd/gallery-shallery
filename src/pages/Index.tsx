@@ -217,6 +217,17 @@ const Index = () => {
     return appTheme;
   };
 
+  // Fix decorative emoji visibility for custom themes
+  const getEmojiStyle = () => {
+    if (appTheme.customColors) {
+      return {
+        filter: 'drop-shadow(2px 2px 4px rgba(255,255,255,0.8))',
+        opacity: 0.6
+      };
+    }
+    return {};
+  };
+
   return (
     <div 
       className={`min-h-screen relative overflow-hidden transition-all duration-500 ${getMainBackgroundClass()}`}
@@ -232,29 +243,55 @@ const Index = () => {
 
       {/* Comic background elements */}
       {homeCustomization.showDecorations && (
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 text-6xl transform rotate-12 text-gray-600">
+        <div className="absolute inset-0 opacity-20">
+          <div 
+            className="absolute top-10 left-10 text-6xl transform rotate-12"
+            style={{
+              ...getEmojiStyle(),
+              color: appTheme.customColors ? 'rgba(255,255,255,0.9)' : undefined
+            }}
+          >
             {decorativeEmojis[0] || '💫'}
           </div>
-          <div className="absolute top-32 right-20 text-4xl transform -rotate-12 text-gray-600">
+          <div 
+            className="absolute top-32 right-20 text-4xl transform -rotate-12"
+            style={{
+              ...getEmojiStyle(),
+              color: appTheme.customColors ? 'rgba(255,255,255,0.9)' : undefined
+            }}
+          >
             {decorativeEmojis[1] || '⭐'}
           </div>
-          <div className="absolute bottom-20 left-32 text-5xl transform rotate-45 text-gray-600">
+          <div 
+            className="absolute bottom-20 left-32 text-5xl transform rotate-45"
+            style={{
+              ...getEmojiStyle(),
+              color: appTheme.customColors ? 'rgba(255,255,255,0.9)' : undefined
+            }}
+          >
             {decorativeEmojis[2] || '✨'}
           </div>
-          <div className="absolute bottom-32 right-10 text-3xl transform -rotate-45 text-gray-600">
+          <div 
+            className="absolute bottom-32 right-10 text-3xl transform -rotate-45"
+            style={{
+              ...getEmojiStyle(),
+              color: appTheme.customColors ? 'rgba(255,255,255,0.9)' : undefined
+            }}
+          >
             {decorativeEmojis[3] || '🎨'}
           </div>
           {decorativeEmojis.slice(4).map((emoji, index) => (
             <div 
               key={index}
-              className={`absolute text-4xl transform text-gray-600 ${
+              className={`absolute text-4xl transform ${
                 index % 2 === 0 ? 'rotate-12' : '-rotate-12'
               }`}
               style={{
                 top: `${20 + (index * 15)}%`,
                 left: `${10 + (index * 20)}%`,
-                zIndex: 1
+                zIndex: 1,
+                ...getEmojiStyle(),
+                color: appTheme.customColors ? 'rgba(255,255,255,0.9)' : undefined
               }}
             >
               {emoji}
