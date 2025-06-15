@@ -24,6 +24,27 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
     return titleStyle;
   };
 
+  const getTitleBackgroundStyle = () => {
+    if (appTheme?.customColors) {
+      return {
+        background: `linear-gradient(135deg, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}30, ${appTheme.customColors.accent}20)`,
+        backdropFilter: 'blur(10px)',
+        border: '2px solid rgba(255,255,255,0.3)',
+        borderRadius: '30px',
+        padding: '20px 40px',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
+      };
+    }
+    return {
+      background: 'rgba(255,255,255,0.9)',
+      backdropFilter: 'blur(10px)',
+      border: '2px solid rgba(0,0,0,0.1)',
+      borderRadius: '30px',
+      padding: '20px 40px',
+      boxShadow: '0 8px 32px rgba(0,0,0,0.1)'
+    };
+  };
+
   const getSubtitleStyle = () => {
     if (appTheme?.customColors) {
       return {
@@ -100,12 +121,14 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
       
       {/* Main title with enhanced styling */}
       <div className="relative z-10 space-y-4">
-        <h1 
-          className={getTitleClasses()}
-          style={getTitleTextStyle()}
-        >
-          Gallery Shallery
-        </h1>
+        <div style={getTitleBackgroundStyle()}>
+          <h1 
+            className={getTitleClasses()}
+            style={getTitleTextStyle()}
+          >
+            Gallery Shallery
+          </h1>
+        </div>
         
         {/* Subtitle with speech bubble effect */}
         <div className="flex items-center justify-center gap-6 mt-6">
