@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -51,6 +50,7 @@ const Index = () => {
   const [albums, setAlbums] = useState<Album[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [currentAlbum, setCurrentAlbum] = useState<Album | null>(null);
   const [appTheme, setAppTheme] = useState<AppTheme>({
@@ -70,6 +70,14 @@ const Index = () => {
   useEffect(() => {
     console.log('Loading data from localStorage...');
     
+    // Check if this is the user's first visit
+    const hasVisited = localStorage.getItem('gallery_shallery_has_visited');
+    if (!hasVisited) {
+      console.log('First time visitor - showing welcome modal');
+      setShowWelcomeModal(true);
+      localStorage.setItem('gallery_shallery_has_visited', 'true');
+    }
+
     // Load albums - no default albums for new users
     const savedAlbums = localStorageService.loadAlbums();
     if (savedAlbums.length > 0) {
@@ -225,6 +233,15 @@ const Index = () => {
       console.error('Error importing backup data:', error);
       throw error;
     }
+  };
+
+  const handleWelcomeThemeSelect = (theme: AppTheme) => {
+    console.log('Selected theme from welcome modal:', theme);
+    setAppTheme(theme);
+  };
+
+  const handleCloseWelcomeModal = () => {
+    setShowWelcomeModal(false);
   };
 
   if (currentAlbum) {
@@ -559,6 +576,13 @@ const Index = () => {
           onFontChange={setCustomFont}
           albums={albums}
           onImportData={handleImportBackupData}
+        />
+
+        {/* Welcome Modal */}
+        <WelcomeModal
+          isOpen={showWelcomeModal}
+          onClose={handleCloseWelcomeModal}
+          onThemeSelect={handleWelcomeThemeSelect}
         />
 
         {/* Floating Mascot */}
