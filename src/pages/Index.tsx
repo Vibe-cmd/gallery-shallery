@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,7 +6,7 @@ import { CreateAlbumModal } from "@/components/gallery/CreateAlbumModal";
 import { ComicHeader } from "@/components/ui/ComicHeader";
 import { FloatingMascot } from "@/components/ui/FloatingMascot";
 import { AlbumView } from "@/components/gallery/AlbumView";
-import { AppSettingsModal } from "@/components/settings/AppSettingsModal";
+import { AppSettingsModal, HomeCustomization } from "@/components/settings/AppSettingsModal";
 
 export interface Album {
   id: string;
@@ -72,6 +71,12 @@ const Index = () => {
     backgroundColor: 'bg-white',
     accentColor: 'from-pink-500 to-purple-600'
   });
+  const [homeCustomization, setHomeCustomization] = useState<HomeCustomization>({
+    blurIntensity: 0,
+    customEmojis: ['⭐', '✨', '🎨', '📸'],
+    showDecorations: true
+  });
+  const [customFont, setCustomFont] = useState<string>("");
 
   const categories = [
     { id: 'clicks', name: 'Clicks', icon: Camera, color: 'bg-yellow-400', description: 'Random photos & selfies' },
@@ -120,30 +125,76 @@ const Index = () => {
     );
   }
 
+  const backgroundStyle = homeCustomization.backgroundImage 
+    ? {
+        backgroundImage: `url(${homeCustomization.backgroundImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        filter: `blur(${homeCustomization.blurIntensity}px)`,
+      }
+    : {};
+
+  const decorativeEmojis = homeCustomization.showDecorations 
+    ? homeCustomization.customEmojis 
+    : [];
+
   return (
     <div className={`min-h-screen bg-gradient-to-br ${appTheme.primaryColor} relative overflow-hidden transition-all duration-500`}>
+      {/* Background Image Overlay */}
+      {homeCustomization.backgroundImage && (
+        <div 
+          className="absolute inset-0 opacity-30"
+          style={backgroundStyle}
+        ></div>
+      )}
+
       {/* Comic background elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 text-6xl transform rotate-12">💫</div>
-        <div className="absolute top-32 right-20 text-4xl transform -rotate-12">⭐</div>
-        <div className="absolute bottom-20 left-32 text-5xl transform rotate-45">✨</div>
-        <div className="absolute bottom-32 right-10 text-3xl transform -rotate-45">🎨</div>
-      </div>
+      {homeCustomization.showDecorations && (
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 text-6xl transform rotate-12">
+            {decorativeEmojis[0] || '💫'}
+          </div>
+          <div className="absolute top-32 right-20 text-4xl transform -rotate-12">
+            {decorativeEmojis[1] || '⭐'}
+          </div>
+          <div className="absolute bottom-20 left-32 text-5xl transform rotate-45">
+            {decorativeEmojis[2] || '✨'}
+          </div>
+          <div className="absolute bottom-32 right-10 text-3xl transform -rotate-45">
+            {decorativeEmojis[3] || '🎨'}
+          </div>
+          {decorativeEmojis.slice(4).map((emoji, index) => (
+            <div 
+              key={index}
+              className={`absolute text-4xl transform ${
+                index % 2 === 0 ? 'rotate-12' : '-rotate-12'
+              }`}
+              style={{
+                top: `${20 + (index * 15)}%`,
+                left: `${10 + (index * 20)}%`,
+                zIndex: 1
+              }}
+            >
+              {emoji}
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Settings Button */}
-        <div className="fixed top-4 right-4 z-50">
+        <div className="fixed top-6 right-6 z-50">
           <Button
             onClick={() => setShowSettingsModal(true)}
             variant="outline"
             size="sm"
-            className="rounded-full comic-shadow bg-white hover:bg-gray-100 border-2 border-black"
+            className="rounded-full comic-shadow bg-white hover:bg-gray-100 border-2 border-black shadow-lg"
           >
             <Settings className="w-4 h-4" />
           </Button>
         </div>
 
-        <ComicHeader />
+        <ComicHeader appTheme={appTheme} customFont={customFont} />
         
         {/* Category Filter Bubbles */}
         <div className="flex flex-wrap gap-4 mb-8 justify-center">
@@ -197,6 +248,10 @@ const Index = () => {
           onClose={() => setShowSettingsModal(false)}
           currentTheme={appTheme}
           onThemeChange={setAppTheme}
+          homeCustomization={homeCustomization}
+          onHomeCustomizationChange={setHomeCustomization}
+          customFont={customFont}
+          onFontChange={setCustomFont}
         />
 
         {/* Floating Mascot */}

@@ -4,6 +4,7 @@ import { ArrowLeft, Plus, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Album, Photo, AppTheme } from "@/pages/Index";
 import { PhotoReviewModal } from "./PhotoReviewModal";
+import { PhotoDetailModal } from "./PhotoDetailModal";
 
 interface AlbumViewProps {
   album: Album;
@@ -15,6 +16,7 @@ interface AlbumViewProps {
 export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewProps) => {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   const [pendingPhotoUrl, setPendingPhotoUrl] = useState("");
   const [pendingFileName, setPendingFileName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -64,6 +66,11 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
       photos: [...album.photos, newPhoto]
     };
     onUpdateAlbum(updatedAlbum);
+  };
+
+  const handlePhotoClick = (photo: Photo) => {
+    setSelectedPhoto(photo);
+    setShowDetailModal(true);
   };
 
   return (
@@ -136,7 +143,7 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
               <div
                 key={photo.id}
                 className="bg-white rounded-2xl p-4 border-4 border-black comic-shadow cursor-pointer transform hover:scale-105 transition-all duration-200"
-                onClick={() => setSelectedPhoto(photo)}
+                onClick={() => handlePhotoClick(photo)}
               >
                 <div className="aspect-square bg-gray-200 rounded-xl mb-3 flex items-center justify-center overflow-hidden">
                   <img 
@@ -163,6 +170,13 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
           photoUrl={pendingPhotoUrl}
           fileName={pendingFileName}
           onSavePhoto={handleSavePhoto}
+        />
+
+        {/* Photo Detail Modal */}
+        <PhotoDetailModal
+          isOpen={showDetailModal}
+          onClose={() => setShowDetailModal(false)}
+          photo={selectedPhoto}
         />
       </div>
     </div>
