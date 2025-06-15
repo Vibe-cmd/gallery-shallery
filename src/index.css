@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -99,5 +100,109 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Comic-style custom utilities */
+@layer utilities {
+  .comic-shadow {
+    box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.8);
+  }
+
+  .font-handwritten {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+  }
+
+  @keyframes boing {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.1) rotate(3deg); }
+  }
+
+  @keyframes pop-in {
+    0% { 
+      transform: scale(0) rotate(-180deg);
+      opacity: 0;
+    }
+    80% { 
+      transform: scale(1.1) rotate(10deg);
+      opacity: 1;
+    }
+    100% { 
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+
+  @keyframes pulse-comic {
+    0%, 100% { 
+      transform: scale(1);
+      box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.7);
+    }
+    50% { 
+      transform: scale(1.05);
+      box-shadow: 0 0 0 10px rgba(139, 69, 19, 0);
+    }
+  }
+
+  .animate-boing {
+    animation: boing 0.6s ease-in-out;
+  }
+
+  .animate-pop-in {
+    animation: pop-in 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+
+  .animate-pulse-comic {
+    animation: pulse-comic 2s infinite;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Text effects for comic style */
+  .text-comic-outline {
+    text-shadow: 
+      -2px -2px 0 #000,
+      2px -2px 0 #000,
+      -2px 2px 0 #000,
+      2px 2px 0 #000;
+  }
+
+  .text-comic-pop {
+    text-shadow: 
+      3px 3px 0 #ff6b6b,
+      6px 6px 0 #4ecdc4,
+      9px 9px 0 #45b7d1;
+  }
+}
+
+/* Line clamp utility */
+@layer utilities {
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 }
