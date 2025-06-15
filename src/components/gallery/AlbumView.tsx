@@ -82,6 +82,15 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
     setShowDetailModal(true);
   };
 
+  const handleDeletePhoto = (photoId: string) => {
+    const updatedAlbum = {
+      ...album,
+      photos: album.photos.filter(photo => photo.id !== photoId)
+    };
+    onUpdateAlbum(updatedAlbum);
+    console.log('Deleted photo:', photoId);
+  };
+
   const getLayoutClasses = () => {
     switch (album.layout) {
       case 'grid':
@@ -289,6 +298,7 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
           isOpen={showDetailModal}
           onClose={() => setShowDetailModal(false)}
           photo={selectedPhoto}
+          onDeletePhoto={handleDeletePhoto}
         />
       </div>
     </div>

@@ -68,37 +68,11 @@ const Index = () => {
   useEffect(() => {
     console.log('Loading data from localStorage...');
     
-    // Load albums
+    // Load albums - no default albums for new users
     const savedAlbums = localStorageService.loadAlbums();
     if (savedAlbums.length > 0) {
       setAlbums(savedAlbums);
       console.log('Loaded albums from localStorage:', savedAlbums);
-    } else {
-      // Set default albums if none exist
-      const defaultAlbums = [
-        {
-          id: '1',
-          title: 'Summer Adventures',
-          category: 'travel' as const,
-          theme: 'pastel-doodle' as const,
-          font: 'handwritten' as const,
-          layout: 'grid' as const,
-          photos: [],
-          createdAt: new Date()
-        },
-        {
-          id: '2',
-          title: 'Random Clicks',
-          category: 'clicks' as const,
-          theme: 'sticker-burst' as const,
-          font: 'bubble' as const,
-          layout: 'collage' as const,
-          photos: [],
-          createdAt: new Date()
-        }
-      ];
-      setAlbums(defaultAlbums);
-      localStorageService.saveAlbums(defaultAlbums);
     }
 
     // Load app theme
@@ -201,6 +175,11 @@ const Index = () => {
     ));
     setCurrentAlbum(updatedAlbum);
     console.log('Updated album:', updatedAlbum);
+  };
+
+  const handleDeleteAlbum = (albumId: string) => {
+    setAlbums(albums.filter(album => album.id !== albumId));
+    console.log('Deleted album:', albumId);
   };
 
   const handleImportBackupData = (backupData: any) => {
@@ -555,6 +534,7 @@ const Index = () => {
           albums={filteredAlbums} 
           onAlbumClick={handleAlbumClick}
           onToggleFavorite={handleToggleFavorite}
+          onDeleteAlbum={handleDeleteAlbum}
         />
 
         {/* Create Album Modal */}

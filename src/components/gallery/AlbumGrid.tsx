@@ -6,9 +6,10 @@ interface AlbumGridProps {
   albums: Album[];
   onAlbumClick: (album: Album) => void;
   onToggleFavorite: (albumId: string) => void;
+  onDeleteAlbum: (albumId: string) => void;
 }
 
-export const AlbumGrid = ({ albums, onAlbumClick, onToggleFavorite }: AlbumGridProps) => {
+export const AlbumGrid = ({ albums, onAlbumClick, onToggleFavorite, onDeleteAlbum }: AlbumGridProps) => {
   if (albums.length === 0) {
     return (
       <div className="text-center py-16">
@@ -28,6 +29,7 @@ export const AlbumGrid = ({ albums, onAlbumClick, onToggleFavorite }: AlbumGridP
           index={index}
           onClick={() => onAlbumClick(album)}
           onToggleFavorite={onToggleFavorite}
+          onDeleteAlbum={onDeleteAlbum}
         />
       ))}
     </div>
