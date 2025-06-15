@@ -17,9 +17,12 @@ export const FloatingMascot = () => {
   ];
 
   const handleClick = () => {
-    setShowTip(true);
-    setCurrentTipIndex((prev) => (prev + 1) % tips.length);
-    setTimeout(() => setShowTip(false), 5000);
+    if (showTip) {
+      setShowTip(false);
+    } else {
+      setShowTip(true);
+      setCurrentTipIndex((prev) => (prev + 1) % tips.length);
+    }
   };
 
   return (
