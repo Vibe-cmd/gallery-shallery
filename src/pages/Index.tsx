@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -131,12 +132,12 @@ const Index = () => {
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Settings Button */}
-        <div className="absolute top-4 right-4">
+        <div className="fixed top-4 right-4 z-50">
           <Button
             onClick={() => setShowSettingsModal(true)}
             variant="outline"
             size="sm"
-            className="rounded-full comic-shadow"
+            className="rounded-full comic-shadow bg-white hover:bg-gray-100 border-2 border-black"
           >
             <Settings className="w-4 h-4" />
           </Button>

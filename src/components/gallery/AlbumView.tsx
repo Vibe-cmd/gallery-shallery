@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { ArrowLeft, Plus, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Album, Photo, AppTheme } from "@/pages/Index";
+import { PhotoReviewModal } from "./PhotoReviewModal";
 
 interface AlbumViewProps {
   album: Album;
@@ -13,6 +14,9 @@ interface AlbumViewProps {
 
 export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewProps) => {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [pendingPhotoUrl, setPendingPhotoUrl] = useState("");
+  const [pendingFileName, setPendingFileName] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const themeStyles = {
@@ -37,27 +41,29 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
-      Array.from(files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const newPhoto: Photo = {
-            id: Date.now().toString() + Math.random(),
-            url: e.target?.result as string,
-            title: file.name.split('.')[0],
-            date: new Date(),
-            stickers: []
-          };
-          
-          const updatedAlbum = {
-            ...album,
-            photos: [...album.photos, newPhoto]
-          };
-          onUpdateAlbum(updatedAlbum);
-        };
-        reader.readAsDataURL(file);
-      });
+    if (files && files[0]) {
+      const file = files[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPendingPhotoUrl(e.target?.result as string);
+        setPendingFileName(file.name);
+        setShowReviewModal(true);
+      };
+      reader.readAsDataURL(file);
     }
+  };
+
+  const handleSavePhoto = (photoData: Omit<Photo, 'id'>) => {
+    const newPhoto: Photo = {
+      ...photoData,
+      id: Date.now().toString() + Math.random()
+    };
+    
+    const updatedAlbum = {
+      ...album,
+      photos: [...album.photos, newPhoto]
+    };
+    onUpdateAlbum(updatedAlbum);
   };
 
   return (
@@ -67,7 +73,6 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
         <input
           ref={fileInputRef}
           type="file"
-          multiple
           accept="image/*"
           onChange={handleFileChange}
           className="hidden"
@@ -144,12 +149,21 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
                   <h4 className="font-bold text-gray-800">{photo.title}</h4>
                 )}
                 {photo.location && (
-                  <p className="text-sm text-gray-600">{photo.location}</p>
+                  <p className="text-sm text-gray-600">📍 {photo.location}</p>
                 )}
               </div>
             ))}
           </div>
         )}
+
+        {/* Photo Review Modal */}
+        <PhotoReviewModal
+          isOpen={showReviewModal}
+          onClose={() => setShowReviewModal(false)}
+          photoUrl={pendingPhotoUrl}
+          fileName={pendingFileName}
+          onSavePhoto={handleSavePhoto}
+        />
       </div>
     </div>
   );
