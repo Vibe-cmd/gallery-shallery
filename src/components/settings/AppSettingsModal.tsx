@@ -114,9 +114,9 @@ export const AppSettingsModal = ({
       
       const newTheme: AppTheme = {
         name: customThemeName,
-        primaryColor: `from-[#${primaryHex}20] via-[#${secondaryHex}10] to-[#${accentHex}20]`,
+        primaryColor: 'custom-gradient', // Use a placeholder since we'll use customColors
         backgroundColor: 'bg-white',
-        accentColor: `from-[#${primaryHex}] to-[#${secondaryHex}]`,
+        accentColor: 'custom-gradient', // Use a placeholder since we'll use customColors
         customColors: {
           primary: customColors.primary,
           secondary: customColors.secondary,
@@ -159,22 +159,25 @@ export const AppSettingsModal = ({
     }
   };
 
-  const getThemePreviewStyle = () => {
-    if (currentTheme.customColors) {
+  const getThemePreviewStyle = (theme: AppTheme) => {
+    if (theme.customColors) {
       return {
-        background: `linear-gradient(to right, ${currentTheme.customColors.primary}20, ${currentTheme.customColors.secondary}10, ${currentTheme.customColors.accent}20)`
+        background: `linear-gradient(to right, ${theme.customColors.primary}30, ${theme.customColors.secondary}30, ${theme.customColors.accent}30)`
       };
     }
     return {};
   };
 
-  const getAccentPreviewStyle = () => {
-    if (currentTheme.customColors) {
-      return {
-        background: `linear-gradient(to right, ${currentTheme.customColors.primary}, ${currentTheme.customColors.secondary})`
-      };
-    }
-    return {};
+  const getLivePreviewStyle = () => {
+    return {
+      background: `linear-gradient(to right, ${customColors.primary}30, ${customColors.secondary}30, ${customColors.accent}30)`
+    };
+  };
+
+  const getLiveButtonPreviewStyle = () => {
+    return {
+      background: `linear-gradient(to right, ${customColors.primary}, ${customColors.secondary})`
+    };
   };
 
   return (
@@ -213,9 +216,7 @@ export const AppSettingsModal = ({
                           ? '' 
                           : `bg-gradient-to-r ${theme.primaryColor}`
                       }`}
-                      style={theme.customColors ? {
-                        background: `linear-gradient(to right, ${theme.customColors.primary}20, ${theme.customColors.secondary}10, ${theme.customColors.accent}20)`
-                      } : {}}
+                      style={theme.customColors ? getThemePreviewStyle(theme) : {}}
                     ></div>
                     <div className="font-bold text-sm">{theme.name}</div>
                   </button>
@@ -273,15 +274,11 @@ export const AppSettingsModal = ({
                   <Label className="text-sm font-medium mb-2 block">Live Theme Preview</Label>
                   <div 
                     className="w-full h-16 rounded-lg mb-3"
-                    style={{
-                      background: `linear-gradient(to right, ${customColors.primary}20, ${customColors.secondary}10, ${customColors.accent}20)`
-                    }}
+                    style={getLivePreviewStyle()}
                   ></div>
                   <div 
                     className="w-32 h-8 rounded-lg"
-                    style={{
-                      background: `linear-gradient(to right, ${customColors.primary}, ${customColors.secondary})`
-                    }}
+                    style={getLiveButtonPreviewStyle()}
                   ></div>
                 </div>
 

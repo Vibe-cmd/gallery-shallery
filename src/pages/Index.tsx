@@ -143,28 +143,55 @@ const Index = () => {
     ? homeCustomization.customEmojis 
     : [];
 
-  // Get dynamic styles for custom themes
-  const getDynamicBackgroundStyle = () => {
+  // Get dynamic styles for custom themes - FIXED LOGIC
+  const getMainBackgroundStyle = () => {
     if (appTheme.customColors) {
       return {
-        background: `linear-gradient(to bottom right, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}10, ${appTheme.customColors.accent}20)`
+        background: `linear-gradient(to bottom right, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}20, ${appTheme.customColors.accent}20)`
       };
     }
     return {};
   };
 
-  const getDynamicButtonStyle = () => {
+  const getButtonStyle = (isSelected: boolean = false) => {
+    if (appTheme.customColors && isSelected) {
+      return {
+        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
+        color: 'white',
+        borderColor: appTheme.customColors.accent
+      };
+    }
     if (appTheme.customColors) {
       return {
-        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`
+        borderColor: appTheme.customColors.primary,
+        color: appTheme.customColors.primary
       };
     }
     return {};
   };
 
-  const getAppTitleStyle = () => {
+  const getCreateButtonStyle = () => {
+    if (appTheme.customColors) {
+      return {
+        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`
+      };
+    }
+    return {};
+  };
+
+  const getTitleStyle = () => {
     if (customFont) {
-      return { fontFamily: customFont };
+      const baseStyle = { fontFamily: customFont };
+      if (appTheme.customColors) {
+        return {
+          ...baseStyle,
+          background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text'
+        };
+      }
+      return baseStyle;
     }
     if (appTheme.customColors) {
       return {
@@ -177,22 +204,12 @@ const Index = () => {
     return {};
   };
 
-  const getCategoryButtonStyle = (isSelected: boolean, categoryColor: string) => {
-    if (appTheme.customColors && isSelected) {
-      return {
-        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
-        color: 'white'
-      };
-    }
-    return {};
-  };
-
   return (
     <div 
       className={`min-h-screen relative overflow-hidden transition-all duration-500 ${
         appTheme.customColors ? '' : `bg-gradient-to-br ${appTheme.primaryColor}`
       }`}
-      style={appTheme.customColors ? getDynamicBackgroundStyle() : {}}
+      style={appTheme.customColors ? getMainBackgroundStyle() : {}}
     >
       {/* Background Image Overlay */}
       {homeCustomization.backgroundImage && (
@@ -248,7 +265,7 @@ const Index = () => {
           </Button>
         </div>
 
-        <div style={getAppTitleStyle()}>
+        <div style={getTitleStyle()}>
           <ComicHeader appTheme={appTheme} customFont={customFont} />
         </div>
         
@@ -258,7 +275,7 @@ const Index = () => {
             variant={selectedCategory === null ? "default" : "outline"}
             onClick={() => setSelectedCategory(null)}
             className="rounded-full font-bold comic-shadow transition-all duration-200"
-            style={appTheme.customColors && selectedCategory === null ? getDynamicButtonStyle() : {}}
+            style={getButtonStyle(selectedCategory === null)}
           >
             All Albums
           </Button>
@@ -270,7 +287,7 @@ const Index = () => {
               className={`rounded-full font-bold comic-shadow flex items-center gap-2 transition-all duration-200 ${
                 selectedCategory === category.id && !appTheme.customColors ? category.color : ''
               }`}
-              style={getCategoryButtonStyle(selectedCategory === category.id, category.color)}
+              style={getButtonStyle(selectedCategory === category.id)}
             >
               <category.icon className="w-4 h-4" />
               {category.name}
@@ -285,7 +302,7 @@ const Index = () => {
             className={`text-white font-bold py-4 px-8 rounded-full text-lg comic-shadow transform hover:scale-105 transition-all duration-200 hover:opacity-90 ${
               appTheme.customColors ? '' : `bg-gradient-to-r ${appTheme.accentColor}`
             }`}
-            style={appTheme.customColors ? getDynamicButtonStyle() : {}}
+            style={appTheme.customColors ? getCreateButtonStyle() : {}}
           >
             <Plus className="w-6 h-6 mr-2" />
             Create New Album
