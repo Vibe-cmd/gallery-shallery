@@ -114,8 +114,8 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
   
   return (
     <div className="text-center mb-16 relative py-8">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      {/* Animated background elements with lower z-index */}
+      <div className="absolute inset-0 flex items-center justify-center z-0">
         <div 
           className={`w-[500px] h-40 ${
             appTheme?.customColors 
@@ -148,8 +148,8 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
         ></div>
       </div>
       
-      {/* Main title with enhanced styling */}
-      <div className="relative z-10 space-y-4">
+      {/* Main title with enhanced styling and higher z-index */}
+      <div className="relative z-20 space-y-4">
         <div style={getTitleBackgroundStyle()}>
           <h1 
             className={getTitleClasses()}
