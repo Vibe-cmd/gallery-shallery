@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
-import { AppTheme } from "@/pages/Index";
+import { AppTheme, Album } from "@/pages/Index";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BackupSettings } from "./BackupSettings";
+import { BackupData } from "@/services/googleDriveBackup";
 
 export interface HomeCustomization {
   backgroundImage?: string;
@@ -23,6 +25,8 @@ interface AppSettingsModalProps {
   onHomeCustomizationChange?: (customization: HomeCustomization) => void;
   customFont?: string;
   onFontChange?: (font: string) => void;
+  albums: Album[];
+  onImportData: (data: BackupData) => void;
 }
 
 export const AppSettingsModal = ({ 
@@ -33,7 +37,9 @@ export const AppSettingsModal = ({
   homeCustomization = { blurIntensity: 0, customEmojis: [], showDecorations: true },
   onHomeCustomizationChange,
   customFont,
-  onFontChange
+  onFontChange,
+  albums,
+  onImportData
 }: AppSettingsModalProps) => {
   const [customGoogleFont, setCustomGoogleFont] = useState("");
   const [customThemes, setCustomThemes] = useState<AppTheme[]>([]);
@@ -226,11 +232,12 @@ export const AppSettingsModal = ({
         </DialogHeader>
 
         <Tabs defaultValue="themes" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="themes">Themes</TabsTrigger>
             <TabsTrigger value="custom">Build Custom Theme</TabsTrigger>
             <TabsTrigger value="home">Home Screen</TabsTrigger>
             <TabsTrigger value="fonts">Fonts</TabsTrigger>
+            <TabsTrigger value="backup">Backup</TabsTrigger>
           </TabsList>
 
           <TabsContent value="themes" className="space-y-6">
@@ -507,6 +514,16 @@ export const AppSettingsModal = ({
                 </div>
               )}
             </div>
+          </TabsContent>
+
+          <TabsContent value="backup" className="space-y-6">
+            <BackupSettings
+              albums={albums}
+              appTheme={currentTheme}
+              homeCustomization={homeCustomization}
+              customFont={customFont || ""}
+              onImportData={onImportData}
+            />
           </TabsContent>
         </Tabs>
 
