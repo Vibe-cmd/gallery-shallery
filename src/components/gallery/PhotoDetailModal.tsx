@@ -40,27 +40,49 @@ export const PhotoDetailModal = ({ isOpen, onClose, photo }: PhotoDetailModalPro
 
   const handleShare = async () => {
     try {
-      if (navigator.share) {
-        await navigator.share({
+      // First try the Web Share API
+      if (navigator.share && navigator.canShare) {
+        const shareData = {
           title: photo.title || 'Check out this photo!',
           text: photo.backstory || 'Amazing photo from my gallery',
           url: photo.url,
-        });
-      } else {
-        // Fallback for browsers that don't support Web Share API
-        await navigator.clipboard.writeText(photo.url);
+        };
+        
+        if (navigator.canShare(shareData)) {
+          await navigator.share(shareData);
+          return;
+        }
+      }
+      
+      // Fallback to clipboard
+      await navigator.clipboard.writeText(photo.url);
+      toast({
+        title: "Link Copied!",
+        description: "Photo link has been copied to your clipboard.",
+      });
+    } catch (error) {
+      console.error('Share error:', error);
+      
+      // Final fallback - try to copy manually
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = photo.url;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
         toast({
           title: "Link Copied!",
           description: "Photo link has been copied to your clipboard.",
         });
+      } catch (fallbackError) {
+        toast({
+          title: "Share Failed",
+          description: "Unable to share or copy the photo link.",
+          variant: "destructive",
+        });
       }
-    } catch (error) {
-      console.log('Error sharing:', error);
-      toast({
-        title: "Share Failed",
-        description: "There was an error sharing the photo.",
-        variant: "destructive",
-      });
     }
   };
 

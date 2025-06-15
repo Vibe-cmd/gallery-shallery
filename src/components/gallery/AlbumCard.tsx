@@ -47,8 +47,8 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
       style={cardStyle}
     >
       <div className={`rounded-3xl p-6 border-4 border-black ${themeStyles[album.theme]} min-h-[250px] relative overflow-hidden`}>
-        {/* Decorative elements */}
-        <div className="absolute top-2 right-2 text-2xl opacity-50">
+        {/* Decorative elements - positioned within rounded area */}
+        <div className="absolute top-4 right-4 text-2xl opacity-50 z-10">
           {album.theme === 'comic-noir' && '🖤'}
           {album.theme === 'pastel-doodle' && '🌸'}
           {album.theme === 'sticker-burst' && '⭐'}
@@ -58,7 +58,7 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
         </div>
         
         {/* Category badge */}
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-4 relative z-20">
           <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
             <CategoryIcon className="w-4 h-4" />
           </div>
@@ -68,12 +68,12 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
         </div>
 
         {/* Album title */}
-        <h3 className={`text-2xl font-bold mb-4 ${album.font !== 'google-font' ? fontStyles[album.font] : ''} line-clamp-2`}>
+        <h3 className={`text-2xl font-bold mb-4 ${album.font !== 'google-font' ? fontStyles[album.font] : ''} line-clamp-2 relative z-20`}>
           {album.title}
         </h3>
 
         {/* Photo count and layout info */}
-        <div className="absolute bottom-4 left-6 right-6">
+        <div className="absolute bottom-4 left-6 right-6 z-20">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium opacity-80">
               {album.photos.length} {album.photos.length === 1 ? 'photo' : 'photos'}
@@ -84,17 +84,17 @@ export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
           </div>
         </div>
 
-        {/* Hover effect with proper border radius */}
-        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl flex items-center justify-center">
+        {/* Hover effect */}
+        <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl flex items-center justify-center z-30">
           <div className="bg-white/90 backdrop-blur-sm rounded-full px-4 py-2 font-bold text-gray-800 border-2 border-black comic-shadow">
             OPEN
           </div>
         </div>
 
-        {/* Comic-style decorations - positioned within rounded corners */}
-        <div className="absolute top-4 right-4 w-6 h-6 bg-yellow-400 rounded-full border-2 border-black transform rotate-45"></div>
-        <div className="absolute bottom-4 right-8 w-3 h-3 bg-red-400 rounded-full border-2 border-black"></div>
-        <div className="absolute top-1/2 left-2 w-2 h-2 bg-blue-400 rounded-full border border-black"></div>
+        {/* Comic-style decorations - properly positioned within rounded corners */}
+        <div className="absolute top-6 right-6 w-6 h-6 bg-yellow-400 rounded-full border-2 border-black transform rotate-45 z-10"></div>
+        <div className="absolute bottom-6 right-10 w-3 h-3 bg-red-400 rounded-full border-2 border-black z-10"></div>
+        <div className="absolute top-1/2 left-4 w-2 h-2 bg-blue-400 rounded-full border border-black z-10"></div>
       </div>
     </div>
   );

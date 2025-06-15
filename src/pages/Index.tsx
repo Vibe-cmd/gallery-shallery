@@ -162,6 +162,13 @@ const Index = () => {
     return {};
   };
 
+  const getAppTitleStyle = () => {
+    if (customFont) {
+      return { fontFamily: customFont };
+    }
+    return {};
+  };
+
   return (
     <div 
       className={`min-h-screen relative overflow-hidden transition-all duration-500 ${
@@ -223,7 +230,9 @@ const Index = () => {
           </Button>
         </div>
 
-        <ComicHeader appTheme={appTheme} customFont={customFont} />
+        <div style={getAppTitleStyle()}>
+          <ComicHeader appTheme={appTheme} customFont={customFont} />
+        </div>
         
         {/* Category Filter Bubbles */}
         <div className="flex flex-wrap gap-4 mb-8 justify-center">
