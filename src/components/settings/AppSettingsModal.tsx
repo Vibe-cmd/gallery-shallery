@@ -15,6 +15,13 @@ interface AppSettingsModalProps {
 
 export const AppSettingsModal = ({ isOpen, onClose, currentTheme, onThemeChange }: AppSettingsModalProps) => {
   const [customGoogleFont, setCustomGoogleFont] = useState("");
+  const [customTheme, setCustomTheme] = useState({
+    name: "",
+    primaryColor: "from-blue-100 via-purple-50 to-pink-100",
+    backgroundColor: "bg-white",
+    accentColor: "from-blue-500 to-purple-500"
+  });
+  const [customThemes, setCustomThemes] = useState<AppTheme[]>([]);
 
   const predefinedThemes: AppTheme[] = [
     {
@@ -49,6 +56,8 @@ export const AppSettingsModal = ({ isOpen, onClose, currentTheme, onThemeChange 
     }
   ];
 
+  const allThemes = [...predefinedThemes, ...customThemes];
+
   const handleAddGoogleFont = () => {
     if (customGoogleFont.trim()) {
       const fontLink = document.createElement('link');
@@ -57,13 +66,46 @@ export const AppSettingsModal = ({ isOpen, onClose, currentTheme, onThemeChange 
       document.head.appendChild(fontLink);
       
       setCustomGoogleFont("");
-      // Could add to a fonts list for future use
     }
   };
 
+  const handleCreateCustomTheme = () => {
+    if (customTheme.name.trim()) {
+      const newTheme: AppTheme = {
+        ...customTheme,
+        name: customTheme.name.trim()
+      };
+      setCustomThemes([...customThemes, newTheme]);
+      setCustomTheme({
+        name: "",
+        primaryColor: "from-blue-100 via-purple-50 to-pink-100",
+        backgroundColor: "bg-white",
+        accentColor: "from-blue-500 to-purple-500"
+      });
+    }
+  };
+
+  const gradientOptions = [
+    { name: "Blue Purple", value: "from-blue-100 via-purple-50 to-pink-100" },
+    { name: "Green Teal", value: "from-green-100 via-emerald-50 to-teal-100" },
+    { name: "Orange Red", value: "from-orange-100 via-red-50 to-pink-100" },
+    { name: "Purple Pink", value: "from-purple-100 via-pink-50 to-rose-100" },
+    { name: "Dark Theme", value: "from-gray-900 via-purple-900 to-black" },
+    { name: "Yellow Orange", value: "from-yellow-100 via-orange-50 to-red-100" }
+  ];
+
+  const accentOptions = [
+    { name: "Blue Purple", value: "from-blue-500 to-purple-500" },
+    { name: "Green Teal", value: "from-green-500 to-emerald-500" },
+    { name: "Orange Red", value: "from-orange-500 to-red-500" },
+    { name: "Purple Pink", value: "from-purple-500 to-pink-500" },
+    { name: "Pink Red", value: "from-pink-500 to-red-500" },
+    { name: "Cyan Blue", value: "from-cyan-500 to-blue-500" }
+  ];
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">App Settings ⚙️</DialogTitle>
         </DialogHeader>
@@ -72,8 +114,8 @@ export const AppSettingsModal = ({ isOpen, onClose, currentTheme, onThemeChange 
           {/* Theme Selection */}
           <div>
             <Label className="text-lg font-bold mb-3 block">App Theme</Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {predefinedThemes.map((theme) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+              {allThemes.map((theme) => (
                 <button
                   key={theme.name}
                   type="button"
@@ -91,8 +133,70 @@ export const AppSettingsModal = ({ isOpen, onClose, currentTheme, onThemeChange 
             </div>
           </div>
 
+          {/* Custom Theme Creator */}
+          <div className="border-t pt-6">
+            <Label className="text-lg font-bold mb-3 block">Create Custom Theme</Label>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-medium">Theme Name</Label>
+                <Input
+                  value={customTheme.name}
+                  onChange={(e) => setCustomTheme({...customTheme, name: e.target.value})}
+                  placeholder="My Awesome Theme"
+                  className="mt-1"
+                />
+              </div>
+              
+              <div>
+                <Label className="text-sm font-medium mb-2 block">Background Gradient</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {gradientOptions.map((gradient) => (
+                    <button
+                      key={gradient.name}
+                      type="button"
+                      onClick={() => setCustomTheme({...customTheme, primaryColor: gradient.value})}
+                      className={`p-3 rounded-lg border-2 ${
+                        customTheme.primaryColor === gradient.value ? 'border-purple-500' : 'border-gray-300'
+                      }`}
+                    >
+                      <div className={`w-full h-8 rounded bg-gradient-to-r ${gradient.value} mb-1`}></div>
+                      <div className="text-xs font-medium">{gradient.name}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-sm font-medium mb-2 block">Accent Color</Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                  {accentOptions.map((accent) => (
+                    <button
+                      key={accent.name}
+                      type="button"
+                      onClick={() => setCustomTheme({...customTheme, accentColor: accent.value})}
+                      className={`p-3 rounded-lg border-2 ${
+                        customTheme.accentColor === accent.value ? 'border-purple-500' : 'border-gray-300'
+                      }`}
+                    >
+                      <div className={`w-full h-8 rounded bg-gradient-to-r ${accent.value} mb-1`}></div>
+                      <div className="text-xs font-medium">{accent.name}</div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <Button
+                onClick={handleCreateCustomTheme}
+                disabled={!customTheme.name.trim()}
+                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              >
+                Create Custom Theme 🎨
+              </Button>
+            </div>
+          </div>
+
           {/* Google Fonts */}
-          <div>
+          <div className="border-t pt-6">
             <Label className="text-lg font-bold mb-3 block">Add Google Font</Label>
             <div className="flex gap-3">
               <Input

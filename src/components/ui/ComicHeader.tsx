@@ -1,17 +1,5 @@
 
-import { useState, useEffect } from "react";
-
 export const ComicHeader = () => {
-  const [bounceText, setBounceText] = useState(false);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setBounceText(true);
-      setTimeout(() => setBounceText(false), 1000);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="text-center mb-12 relative">
       {/* Comic explosion background */}
@@ -19,7 +7,7 @@ export const ComicHeader = () => {
         <div className="w-96 h-32 bg-gradient-to-r from-yellow-300 via-orange-300 to-red-300 rounded-full opacity-20 transform rotate-3"></div>
       </div>
       
-      <h1 className={`text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 relative z-10 comic-shadow transition-all duration-300 ${bounceText ? 'animate-bounce' : ''}`}>
+      <h1 className="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 relative z-10 comic-shadow">
         Gallery Shallery
       </h1>
       

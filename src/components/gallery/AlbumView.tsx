@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { ArrowLeft, Plus, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Album, Photo, AppTheme } from "@/pages/Index";
@@ -13,6 +13,7 @@ interface AlbumViewProps {
 
 export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewProps) => {
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const themeStyles = {
     'comic-noir': 'bg-gradient-to-br from-gray-800 to-black text-white',
@@ -31,13 +32,47 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
   };
 
   const handleAddPhoto = () => {
-    // Placeholder for photo upload functionality
-    console.log('Add photo functionality to be implemented');
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const newPhoto: Photo = {
+            id: Date.now().toString() + Math.random(),
+            url: e.target?.result as string,
+            title: file.name.split('.')[0],
+            date: new Date(),
+            stickers: []
+          };
+          
+          const updatedAlbum = {
+            ...album,
+            photos: [...album.photos, newPhoto]
+          };
+          onUpdateAlbum(updatedAlbum);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
   };
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${appTheme.primaryColor} transition-all duration-500`}>
       <div className="container mx-auto px-4 py-8">
+        {/* Hidden file input */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={handleFileChange}
+          className="hidden"
+        />
+
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button
@@ -98,8 +133,12 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
                 className="bg-white rounded-2xl p-4 border-4 border-black comic-shadow cursor-pointer transform hover:scale-105 transition-all duration-200"
                 onClick={() => setSelectedPhoto(photo)}
               >
-                <div className="aspect-square bg-gray-200 rounded-xl mb-3 flex items-center justify-center">
-                  <span className="text-4xl">📷</span>
+                <div className="aspect-square bg-gray-200 rounded-xl mb-3 flex items-center justify-center overflow-hidden">
+                  <img 
+                    src={photo.url} 
+                    alt={photo.title || 'Photo'}
+                    className="w-full h-full object-cover rounded-xl"
+                  />
                 </div>
                 {photo.title && (
                   <h4 className="font-bold text-gray-800">{photo.title}</h4>

@@ -1,26 +1,13 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export const FloatingMascot = () => {
-  const [isWaving, setIsWaving] = useState(false);
   const [showTip, setShowTip] = useState(false);
 
-  useEffect(() => {
-    const waveInterval = setInterval(() => {
-      setIsWaving(true);
-      setTimeout(() => setIsWaving(false), 2000);
-    }, 12000); // Reduced frequency
-
-    const tipInterval = setInterval(() => {
-      setShowTip(true);
-      setTimeout(() => setShowTip(false), 4000);
-    }, 20000); // Reduced frequency
-
-    return () => {
-      clearInterval(waveInterval);
-      clearInterval(tipInterval);
-    };
-  }, []);
+  const handleClick = () => {
+    setShowTip(true);
+    setTimeout(() => setShowTip(false), 4000);
+  };
 
   return (
     <div className="fixed bottom-8 right-8 z-50">
@@ -35,7 +22,10 @@ export const FloatingMascot = () => {
       )}
       
       {/* Mascot */}
-      <div className={`text-6xl cursor-pointer select-none transform transition-transform duration-500 ${isWaving ? 'animate-bounce' : 'hover:scale-110'}`}>
+      <div 
+        className="text-6xl cursor-pointer select-none transform transition-transform duration-200 hover:scale-110"
+        onClick={handleClick}
+      >
         👋
       </div>
     </div>
