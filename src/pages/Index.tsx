@@ -143,11 +143,12 @@ const Index = () => {
     ? homeCustomization.customEmojis 
     : [];
 
-  // Get dynamic styles for custom themes - FIXED LOGIC
+  // Get dynamic styles for custom themes - CORRECTED IMPLEMENTATION
   const getMainBackgroundStyle = () => {
     if (appTheme.customColors) {
       return {
-        background: `linear-gradient(to bottom right, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}20, ${appTheme.customColors.accent}20)`
+        background: `linear-gradient(135deg, ${appTheme.customColors.primary}15, ${appTheme.customColors.secondary}15, ${appTheme.customColors.accent}10)`,
+        minHeight: '100vh'
       };
     }
     return {};
@@ -158,13 +159,16 @@ const Index = () => {
       return {
         background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
         color: 'white',
-        borderColor: appTheme.customColors.accent
+        borderColor: appTheme.customColors.accent,
+        borderWidth: '2px'
       };
     }
     if (appTheme.customColors) {
       return {
         borderColor: appTheme.customColors.primary,
-        color: appTheme.customColors.primary
+        color: appTheme.customColors.primary,
+        backgroundColor: 'white',
+        borderWidth: '2px'
       };
     }
     return {};
@@ -173,41 +177,41 @@ const Index = () => {
   const getCreateButtonStyle = () => {
     if (appTheme.customColors) {
       return {
-        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`
+        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
+        color: 'white'
       };
     }
     return {};
   };
 
   const getTitleStyle = () => {
-    if (customFont) {
-      const baseStyle = { fontFamily: customFont };
-      if (appTheme.customColors) {
-        return {
-          ...baseStyle,
-          background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text'
-        };
-      }
-      return baseStyle;
-    }
+    const baseStyle = customFont ? { fontFamily: customFont } : {};
+    
     if (appTheme.customColors) {
       return {
+        ...baseStyle,
         background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
         WebkitBackgroundClip: 'text',
         WebkitTextFillColor: 'transparent',
         backgroundClip: 'text'
       };
     }
-    return {};
+    return baseStyle;
+  };
+
+  const getComicHeaderStyle = () => {
+    if (appTheme.customColors) {
+      return {
+        accentColor: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`
+      };
+    }
+    return appTheme;
   };
 
   return (
     <div 
       className={`min-h-screen relative overflow-hidden transition-all duration-500 ${
-        appTheme.customColors ? '' : `bg-gradient-to-br ${appTheme.primaryColor}`
+        appTheme.customColors ? 'bg-white' : `bg-gradient-to-br ${appTheme.primaryColor}`
       }`}
       style={appTheme.customColors ? getMainBackgroundStyle() : {}}
     >
@@ -222,22 +226,22 @@ const Index = () => {
       {/* Comic background elements */}
       {homeCustomization.showDecorations && (
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 text-6xl transform rotate-12">
+          <div className="absolute top-10 left-10 text-6xl transform rotate-12 text-gray-600">
             {decorativeEmojis[0] || '💫'}
           </div>
-          <div className="absolute top-32 right-20 text-4xl transform -rotate-12">
+          <div className="absolute top-32 right-20 text-4xl transform -rotate-12 text-gray-600">
             {decorativeEmojis[1] || '⭐'}
           </div>
-          <div className="absolute bottom-20 left-32 text-5xl transform rotate-45">
+          <div className="absolute bottom-20 left-32 text-5xl transform rotate-45 text-gray-600">
             {decorativeEmojis[2] || '✨'}
           </div>
-          <div className="absolute bottom-32 right-10 text-3xl transform -rotate-45">
+          <div className="absolute bottom-32 right-10 text-3xl transform -rotate-45 text-gray-600">
             {decorativeEmojis[3] || '🎨'}
           </div>
           {decorativeEmojis.slice(4).map((emoji, index) => (
             <div 
               key={index}
-              className={`absolute text-4xl transform ${
+              className={`absolute text-4xl transform text-gray-600 ${
                 index % 2 === 0 ? 'rotate-12' : '-rotate-12'
               }`}
               style={{
@@ -266,7 +270,7 @@ const Index = () => {
         </div>
 
         <div style={getTitleStyle()}>
-          <ComicHeader appTheme={appTheme} customFont={customFont} />
+          <ComicHeader appTheme={getComicHeaderStyle()} customFont={customFont} />
         </div>
         
         {/* Category Filter Bubbles */}
@@ -274,7 +278,7 @@ const Index = () => {
           <Button
             variant={selectedCategory === null ? "default" : "outline"}
             onClick={() => setSelectedCategory(null)}
-            className="rounded-full font-bold comic-shadow transition-all duration-200"
+            className="rounded-full font-bold comic-shadow transition-all duration-200 text-gray-800"
             style={getButtonStyle(selectedCategory === null)}
           >
             All Albums
@@ -284,7 +288,7 @@ const Index = () => {
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
-              className={`rounded-full font-bold comic-shadow flex items-center gap-2 transition-all duration-200 ${
+              className={`rounded-full font-bold comic-shadow flex items-center gap-2 transition-all duration-200 text-gray-800 ${
                 selectedCategory === category.id && !appTheme.customColors ? category.color : ''
               }`}
               style={getButtonStyle(selectedCategory === category.id)}
