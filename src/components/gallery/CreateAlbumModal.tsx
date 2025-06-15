@@ -34,12 +34,22 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
     { id: 'neon-pop', name: 'Neon Pop', preview: 'bg-gradient-to-br from-cyan-400 to-blue-500' },
     { id: 'vintage-sketch', name: 'Vintage Sketch', preview: 'bg-gradient-to-br from-amber-200 to-orange-200' },
     { id: 'kawaii-burst', name: 'Kawaii Burst', preview: 'bg-gradient-to-br from-pink-300 to-purple-300' },
+    { id: 'retro-wave', name: 'Retro Wave', preview: 'bg-gradient-to-br from-purple-600 to-pink-600' },
+    { id: 'forest-nature', name: 'Forest Nature', preview: 'bg-gradient-to-br from-green-400 to-emerald-600' },
+    { id: 'ocean-depths', name: 'Ocean Depths', preview: 'bg-gradient-to-br from-blue-600 to-cyan-500' },
+    { id: 'sunset-glow', name: 'Sunset Glow', preview: 'bg-gradient-to-br from-orange-400 to-red-500' },
+    { id: 'minimalist-white', name: 'Minimalist White', preview: 'bg-gradient-to-br from-gray-100 to-gray-200' },
+    { id: 'galaxy-space', name: 'Galaxy Space', preview: 'bg-gradient-to-br from-indigo-900 to-purple-900' },
   ];
 
   const fonts = [
     { id: 'handwritten', name: 'Handwritten', preview: 'font-handwritten' },
     { id: 'typewriter', name: 'Typewriter', preview: 'font-mono' },
     { id: 'bubble', name: 'Bubble', preview: 'font-black' },
+    { id: 'serif-classic', name: 'Serif Classic', preview: 'font-serif' },
+    { id: 'sans-modern', name: 'Sans Modern', preview: 'font-sans' },
+    { id: 'script-elegant', name: 'Script Elegant', preview: 'font-cursive' },
+    { id: 'display-bold', name: 'Display Bold', preview: 'font-black' },
     { id: 'google-font', name: 'Google Font', preview: 'font-sans' },
   ];
 
@@ -48,6 +58,10 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
     { id: 'panel', name: 'Comic Panel', description: 'Comic book style' },
     { id: 'vertical', name: 'Vertical Scroll', description: 'Instagram-like feed' },
     { id: 'collage', name: 'Collage Style', description: 'Artistic arrangement' },
+    { id: 'masonry', name: 'Masonry', description: 'Pinterest-style layout' },
+    { id: 'timeline', name: 'Timeline', description: 'Chronological display' },
+    { id: 'polaroid', name: 'Polaroid Stack', description: 'Vintage photo stack' },
+    { id: 'magazine', name: 'Magazine Layout', description: 'Editorial style' },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -83,7 +97,7 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">Create Your Album! 🎨</DialogTitle>
         </DialogHeader>
@@ -130,19 +144,19 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
           {/* Theme Selection */}
           <div>
             <Label className="text-lg font-bold mb-3 block">Theme</Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {themes.map((themeOption) => (
                 <button
                   key={themeOption.id}
                   type="button"
                   onClick={() => setTheme(themeOption.id as Album['theme'])}
-                  className={`p-4 rounded-xl border-2 transition-all ${
+                  className={`p-3 rounded-xl border-2 transition-all ${
                     theme === themeOption.id
                       ? 'border-purple-500 scale-105'
                       : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
-                  <div className={`w-full h-16 rounded-lg mb-2 ${themeOption.preview}`}></div>
+                  <div className={`w-full h-12 rounded-lg mb-2 ${themeOption.preview}`}></div>
                   <span className="font-bold text-xs">{themeOption.name}</span>
                 </button>
               ))}
@@ -186,7 +200,7 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
           {/* Layout Selection */}
           <div>
             <Label className="text-lg font-bold mb-3 block">Layout Style</Label>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
               {layouts.map((layoutOption) => (
                 <button
                   key={layoutOption.id}
@@ -198,8 +212,8 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
                       : 'border-gray-300 hover:border-gray-400'
                   }`}
                 >
-                  <div className="font-bold mb-1">{layoutOption.name}</div>
-                  <p className="text-sm text-gray-600">{layoutOption.description}</p>
+                  <div className="font-bold mb-1 text-sm">{layoutOption.name}</div>
+                  <p className="text-xs text-gray-600">{layoutOption.description}</p>
                 </button>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AlbumGrid } from "@/components/gallery/AlbumGrid";
@@ -7,15 +7,16 @@ import { ComicHeader } from "@/components/ui/ComicHeader";
 import { FloatingMascot } from "@/components/ui/FloatingMascot";
 import { AlbumView } from "@/components/gallery/AlbumView";
 import { AppSettingsModal, HomeCustomization } from "@/components/settings/AppSettingsModal";
+import { localStorageService } from "@/services/localStorage";
 
 export interface Album {
   id: string;
   title: string;
   category: 'clicks' | 'travel' | 'personal' | 'custom';
-  theme: 'comic-noir' | 'pastel-doodle' | 'sticker-burst' | 'neon-pop' | 'vintage-sketch' | 'kawaii-burst';
-  font: 'handwritten' | 'typewriter' | 'bubble' | 'google-font';
+  theme: 'comic-noir' | 'pastel-doodle' | 'sticker-burst' | 'neon-pop' | 'vintage-sketch' | 'kawaii-burst' | 'retro-wave' | 'forest-nature' | 'ocean-depths' | 'sunset-glow' | 'minimalist-white' | 'galaxy-space';
+  font: 'handwritten' | 'typewriter' | 'bubble' | 'google-font' | 'serif-classic' | 'sans-modern' | 'script-elegant' | 'display-bold';
   googleFont?: string;
-  layout: 'panel' | 'vertical' | 'grid' | 'collage';
+  layout: 'panel' | 'vertical' | 'grid' | 'collage' | 'masonry' | 'timeline' | 'polaroid' | 'magazine';
   coverIcon?: string;
   photos: Photo[];
   createdAt: Date;
@@ -44,28 +45,7 @@ export interface AppTheme {
 }
 
 const Index = () => {
-  const [albums, setAlbums] = useState<Album[]>([
-    {
-      id: '1',
-      title: 'Summer Adventures',
-      category: 'travel',
-      theme: 'pastel-doodle',
-      font: 'handwritten',
-      layout: 'grid',
-      photos: [],
-      createdAt: new Date()
-    },
-    {
-      id: '2',
-      title: 'Random Clicks',
-      category: 'clicks',
-      theme: 'sticker-burst',
-      font: 'bubble',
-      layout: 'collage',
-      photos: [],
-      createdAt: new Date()
-    }
-  ]);
+  const [albums, setAlbums] = useState<Album[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -82,6 +62,96 @@ const Index = () => {
     showDecorations: true
   });
   const [customFont, setCustomFont] = useState<string>("");
+
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    console.log('Loading data from localStorage...');
+    
+    // Load albums
+    const savedAlbums = localStorageService.loadAlbums();
+    if (savedAlbums.length > 0) {
+      setAlbums(savedAlbums);
+      console.log('Loaded albums from localStorage:', savedAlbums);
+    } else {
+      // Set default albums if none exist
+      const defaultAlbums = [
+        {
+          id: '1',
+          title: 'Summer Adventures',
+          category: 'travel' as const,
+          theme: 'pastel-doodle' as const,
+          font: 'handwritten' as const,
+          layout: 'grid' as const,
+          photos: [],
+          createdAt: new Date()
+        },
+        {
+          id: '2',
+          title: 'Random Clicks',
+          category: 'clicks' as const,
+          theme: 'sticker-burst' as const,
+          font: 'bubble' as const,
+          layout: 'collage' as const,
+          photos: [],
+          createdAt: new Date()
+        }
+      ];
+      setAlbums(defaultAlbums);
+      localStorageService.saveAlbums(defaultAlbums);
+    }
+
+    // Load app theme
+    const savedTheme = localStorageService.loadAppTheme();
+    if (savedTheme) {
+      setAppTheme(savedTheme);
+      console.log('Loaded theme from localStorage:', savedTheme);
+    }
+
+    // Load home customization
+    const savedHomeCustomization = localStorageService.loadHomeCustomization();
+    if (savedHomeCustomization) {
+      setHomeCustomization(savedHomeCustomization);
+      console.log('Loaded home customization from localStorage:', savedHomeCustomization);
+    }
+
+    // Load custom font
+    const savedFont = localStorageService.loadCustomFont();
+    if (savedFont) {
+      setCustomFont(savedFont);
+      console.log('Loaded custom font from localStorage:', savedFont);
+      
+      // Re-load the font
+      const fontLink = document.createElement('link');
+      fontLink.href = `https://fonts.googleapis.com/css2?family=${savedFont.replace(' ', '+')}&display=swap`;
+      fontLink.rel = 'stylesheet';
+      document.head.appendChild(fontLink);
+    }
+  }, []);
+
+  // Save data to localStorage whenever state changes
+  useEffect(() => {
+    if (albums.length > 0) {
+      localStorageService.saveAlbums(albums);
+      console.log('Saved albums to localStorage:', albums);
+    }
+  }, [albums]);
+
+  useEffect(() => {
+    localStorageService.saveAppTheme(appTheme);
+    console.log('Saved theme to localStorage:', appTheme);
+  }, [appTheme]);
+
+  useEffect(() => {
+    localStorageService.saveHomeCustomization(homeCustomization);
+    console.log('Saved home customization to localStorage:', homeCustomization);
+  }, [homeCustomization]);
+
+  useEffect(() => {
+    if (customFont) {
+      localStorageService.saveCustomFont(customFont);
+      console.log('Saved custom font to localStorage:', customFont);
+    }
+  }, [customFont]);
 
   const categories = [
     { id: 'clicks', name: 'Clicks', icon: Camera, color: 'bg-yellow-400', description: 'Random photos & selfies' },
@@ -102,6 +172,7 @@ const Index = () => {
     };
     setAlbums([...albums, album]);
     setShowCreateModal(false);
+    console.log('Created new album:', album);
   };
 
   const handleAlbumClick = (album: Album) => {
@@ -117,6 +188,7 @@ const Index = () => {
       album.id === updatedAlbum.id ? updatedAlbum : album
     ));
     setCurrentAlbum(updatedAlbum);
+    console.log('Updated album:', updatedAlbum);
   };
 
   if (currentAlbum) {
@@ -346,7 +418,7 @@ const Index = () => {
             onClick={() => setShowSettingsModal(true)}
             variant="outline"
             size="sm"
-            className="rounded-full comic-shadow bg-white hover:bg-gray-100 border-2 border-black shadow-lg"
+            className="rounded-full bg-white hover:bg-gray-100 border-2 border-white shadow-lg"
           >
             <Settings className="w-4 h-4" />
           </Button>
@@ -361,7 +433,7 @@ const Index = () => {
           <Button
             variant={selectedCategory === null ? "default" : "outline"}
             onClick={() => setSelectedCategory(null)}
-            className={`rounded-full font-bold comic-shadow transition-all duration-200 ${getTextColorClass()}`}
+            className={`rounded-full font-bold transition-all duration-200 ${getTextColorClass()}`}
             style={getButtonStyle(selectedCategory === null)}
           >
             All Albums
@@ -371,7 +443,7 @@ const Index = () => {
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
-              className={`rounded-full font-bold comic-shadow flex items-center gap-2 transition-all duration-200 ${getTextColorClass()} ${
+              className={`rounded-full font-bold flex items-center gap-2 transition-all duration-200 ${getTextColorClass()} ${
                 selectedCategory === category.id && !appTheme.customColors ? category.color : ''
               }`}
               style={getButtonStyle(selectedCategory === category.id)}
@@ -386,7 +458,7 @@ const Index = () => {
         <div className="text-center mb-8">
           <Button
             onClick={() => setShowCreateModal(true)}
-            className={`text-white font-bold py-4 px-8 rounded-full text-lg comic-shadow transform hover:scale-105 transition-all duration-200 hover:opacity-90 ${
+            className={`text-white font-bold py-4 px-8 rounded-full text-lg transform hover:scale-105 transition-all duration-200 hover:opacity-90 ${
               appTheme.customColors ? '' : `bg-gradient-to-r ${appTheme.accentColor}`
             }`}
             style={appTheme.customColors ? getCreateButtonStyle() : {}}

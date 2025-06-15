@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -66,6 +65,36 @@ export const AppSettingsModal = ({
       primaryColor: 'from-gray-900 via-purple-900 to-black',
       backgroundColor: 'bg-gray-800',
       accentColor: 'from-purple-500 to-pink-500'
+    },
+    {
+      name: 'Midnight Purple',
+      primaryColor: 'from-purple-900 via-indigo-900 to-black',
+      backgroundColor: 'bg-gray-900',
+      accentColor: 'from-purple-400 to-indigo-400'
+    },
+    {
+      name: 'Dark Ocean',
+      primaryColor: 'from-blue-900 via-slate-900 to-black',
+      backgroundColor: 'bg-slate-800',
+      accentColor: 'from-blue-400 to-cyan-400'
+    },
+    {
+      name: 'Noir',
+      primaryColor: 'from-gray-800 via-gray-900 to-black',
+      backgroundColor: 'bg-black',
+      accentColor: 'from-gray-400 to-white'
+    },
+    {
+      name: 'Dark Forest',
+      primaryColor: 'from-emerald-900 via-green-900 to-black',
+      backgroundColor: 'bg-green-900',
+      accentColor: 'from-emerald-400 to-green-400'
+    },
+    {
+      name: 'Crimson Night',
+      primaryColor: 'from-red-900 via-rose-900 to-black',
+      backgroundColor: 'bg-red-900',
+      accentColor: 'from-red-400 to-rose-400'
     },
     {
       name: 'Ocean Breeze',
