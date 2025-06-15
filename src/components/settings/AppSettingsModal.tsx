@@ -8,6 +8,7 @@ import { AppTheme, Album } from "@/pages/Index";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BackupSettings } from "./BackupSettings";
 import { BackupData } from "@/services/googleDriveBackup";
+import { ExternalLink } from "lucide-react";
 
 export interface HomeCustomization {
   backgroundImage?: string;
@@ -486,7 +487,18 @@ export const AppSettingsModal = ({
 
           <TabsContent value="fonts" className="space-y-6">
             <div>
-              <Label className="text-lg font-bold mb-3 block">Add Google Font</Label>
+              <div className="flex items-center justify-between mb-3">
+                <Label className="text-lg font-bold">Add Google Font</Label>
+                <Button
+                  onClick={() => window.open('https://fonts.google.com', '_blank')}
+                  variant="outline"
+                  size="sm"
+                  className="text-blue-600 hover:text-blue-700"
+                >
+                  <ExternalLink className="w-4 h-4 mr-2" />
+                  Browse Fonts
+                </Button>
+              </div>
               <div className="flex gap-3">
                 <Input
                   value={customGoogleFont}
