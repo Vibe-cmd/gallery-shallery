@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -161,7 +162,9 @@ const Index = () => {
     { id: 'custom', name: 'Custom', icon: Tag, color: 'bg-purple-400', description: 'Your own tags' }
   ];
 
-  const filteredAlbums = selectedCategory 
+  const filteredAlbums = selectedCategory === 'favorites'
+    ? albums.filter(album => album.isFavorite)
+    : selectedCategory 
     ? albums.filter(album => album.category === selectedCategory)
     : albums;
 
@@ -447,6 +450,17 @@ const Index = () => {
             style={getButtonStyle(selectedCategory === null)}
           >
             All Albums
+          </Button>
+          <Button
+            variant={selectedCategory === 'favorites' ? "default" : "outline"}
+            onClick={() => setSelectedCategory('favorites')}
+            className={`rounded-full font-bold flex items-center gap-2 transition-all duration-200 ${getTextColorClass()} ${
+              selectedCategory === 'favorites' && !appTheme.customColors ? 'bg-red-400' : ''
+            }`}
+            style={getButtonStyle(selectedCategory === 'favorites')}
+          >
+            <Heart className="w-4 h-4" />
+            Favorites
           </Button>
           {categories.map(category => (
             <Button
