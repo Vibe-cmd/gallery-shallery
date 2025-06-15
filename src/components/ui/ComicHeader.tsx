@@ -74,9 +74,9 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
 
   const getTitleClasses = () => {
     if (appTheme?.customColors) {
-      return 'text-6xl md:text-8xl font-black transform hover:scale-105 transition-transform duration-300';
+      return 'text-5xl md:text-7xl font-black transform hover:scale-105 transition-transform duration-300';
     }
-    return 'text-6xl md:text-8xl font-black text-transparent bg-clip-text transform hover:scale-105 transition-transform duration-300';
+    return 'text-5xl md:text-7xl font-black text-transparent bg-clip-text transform hover:scale-105 transition-transform duration-300';
   };
 
   const getTitleGradientStyle = () => {
