@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -143,40 +144,36 @@ const Index = () => {
     ? homeCustomization.customEmojis 
     : [];
 
-  // Simplified background class logic
-  const getBackgroundClass = () => {
-    if (appTheme.customColors) {
-      // Create a gradient using custom colors similar to predefined themes
-      return '';
-    }
-    return `bg-gradient-to-br ${appTheme.primaryColor}`;
-  };
-
-  // Simplified background style for custom themes
-  const getBackgroundStyle = () => {
+  // Unified theme styling functions
+  const getMainBackgroundStyle = () => {
     if (appTheme.customColors) {
       return {
-        background: `linear-gradient(to bottom right, ${appTheme.customColors.primary}30, ${appTheme.customColors.secondary}20, ${appTheme.customColors.accent}25)`
+        background: `linear-gradient(to bottom right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary}, ${appTheme.customColors.accent})`
       };
     }
     return {};
   };
 
-  const getButtonStyle = (isSelected: boolean = false) => {
-    if (appTheme.customColors && isSelected) {
-      return {
-        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
-        color: 'white',
-        borderColor: appTheme.customColors.accent,
-        borderWidth: '2px'
-      };
-    }
+  const getMainBackgroundClass = () => {
     if (appTheme.customColors) {
+      return '';
+    }
+    return `bg-gradient-to-br ${appTheme.primaryColor}`;
+  };
+
+  const getButtonStyle = (isSelected: boolean = false) => {
+    if (appTheme.customColors) {
+      if (isSelected) {
+        return {
+          background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
+          color: 'white',
+          border: `2px solid ${appTheme.customColors.accent}`
+        };
+      }
       return {
-        borderColor: appTheme.customColors.primary,
-        color: appTheme.customColors.primary,
         backgroundColor: 'white',
-        borderWidth: '2px'
+        color: appTheme.customColors.primary,
+        border: `2px solid ${appTheme.customColors.primary}`
       };
     }
     return {};
@@ -210,8 +207,11 @@ const Index = () => {
   const getComicHeaderTheme = () => {
     if (appTheme.customColors) {
       return {
-        ...appTheme,
-        accentColor: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`
+        name: appTheme.name,
+        primaryColor: appTheme.primaryColor,
+        backgroundColor: appTheme.backgroundColor,
+        accentColor: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
+        customColors: appTheme.customColors
       };
     }
     return appTheme;
@@ -219,8 +219,8 @@ const Index = () => {
 
   return (
     <div 
-      className={`min-h-screen relative overflow-hidden transition-all duration-500 ${getBackgroundClass()}`}
-      style={getBackgroundStyle()}
+      className={`min-h-screen relative overflow-hidden transition-all duration-500 ${getMainBackgroundClass()}`}
+      style={getMainBackgroundStyle()}
     >
       {/* Background Image Overlay */}
       {homeCustomization.backgroundImage && (
