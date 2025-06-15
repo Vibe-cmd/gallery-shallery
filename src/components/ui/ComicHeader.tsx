@@ -1,3 +1,4 @@
+
 import { AppTheme } from "@/pages/Index";
 
 interface ComicHeaderProps {
@@ -26,7 +27,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
         backdropFilter: 'blur(10px)',
         border: '2px solid rgba(255,255,255,0.18)',
         borderRadius: '30px',
-        padding: '25px 40px 35px 40px', // Increased bottom padding for descenders
+        padding: '25px 40px 50px 40px', // Increased bottom padding even more for descenders
         boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
       };
     }
@@ -35,7 +36,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
       backdropFilter: 'blur(10px)',
       border: '2px solid rgba(255,255,255,0.3)',
       borderRadius: '30px',
-      padding: '25px 40px 35px 40px', // Increased bottom padding for descenders
+      padding: '25px 40px 50px 40px', // Increased bottom padding even more for descenders
       boxShadow: '0 8px 32px rgba(0,0,0,0.07)'
     };
   };
