@@ -128,7 +128,7 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
   const getImageClasses = (index: number) => {
     switch (album.layout) {
       case 'polaroid':
-        return "w-full h-40 object-cover rounded-lg";
+        return "w-full h-32 object-cover rounded-lg";
       case 'timeline':
         return "w-32 h-32 object-cover rounded-xl";
       case 'magazine':
@@ -170,14 +170,14 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
     if (album.layout === 'polaroid') {
       return (
         <>
-          <div className="bg-gray-200 rounded-xl mb-3 flex items-center justify-center overflow-hidden aspect-square">
+          <div className="bg-gray-200 rounded-xl mb-3 flex items-center justify-center overflow-hidden h-32">
             <img 
               src={photo.url} 
               alt={photo.title || 'Photo'}
               className={getImageClasses(index)}
             />
           </div>
-          <p className="text-center text-sm text-gray-600 mt-2 font-handwritten">
+          <p className="text-center text-sm text-gray-800 font-bold mt-2 font-handwritten bg-white/80 rounded px-2 py-1">
             {photo.title || 'Memory'}
           </p>
         </>
