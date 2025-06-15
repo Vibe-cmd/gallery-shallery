@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -45,11 +46,13 @@ export const AppSettingsModal = ({
     accent: "#EC4899"
   });
   const [customThemeName, setCustomThemeName] = useState("");
+  const [customThemeEmojis, setCustomThemeEmojis] = useState<string[]>(['⭐', '✨', '🎨', '📸']);
+  const [customEmojiInput, setCustomEmojiInput] = useState("");
   
   // Home customization states
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(homeCustomization.backgroundImage || "");
   const [blurValue, setBlurValue] = useState([homeCustomization.blurIntensity]);
-  const [customEmojiInput, setCustomEmojiInput] = useState("");
+  const [homeEmojiInput, setHomeEmojiInput] = useState("");
 
   const predefinedThemes: AppTheme[] = [
     {
@@ -100,23 +103,13 @@ export const AppSettingsModal = ({
     }
   };
 
-  const hexToTailwindColor = (hex: string) => {
-    // Remove the # from hex
-    const cleanHex = hex.replace('#', '');
-    return cleanHex;
-  };
-
   const handleCreateColorTheme = () => {
     if (customThemeName.trim()) {
-      const primaryHex = hexToTailwindColor(customColors.primary);
-      const secondaryHex = hexToTailwindColor(customColors.secondary);
-      const accentHex = hexToTailwindColor(customColors.accent);
-      
       const newTheme: AppTheme = {
         name: customThemeName,
-        primaryColor: 'custom-gradient', // Use a placeholder since we'll use customColors
+        primaryColor: 'custom-gradient',
         backgroundColor: 'bg-white',
-        accentColor: 'custom-gradient', // Use a placeholder since we'll use customColors
+        accentColor: 'custom-gradient',
         customColors: {
           primary: customColors.primary,
           secondary: customColors.secondary,
@@ -127,8 +120,16 @@ export const AppSettingsModal = ({
       const updatedCustomThemes = [...customThemes, newTheme];
       setCustomThemes(updatedCustomThemes);
       onThemeChange(newTheme);
-      setCustomThemeName("");
       
+      // Apply custom emojis when creating theme
+      if (onHomeCustomizationChange && customThemeEmojis.length > 0) {
+        onHomeCustomizationChange({
+          ...homeCustomization,
+          customEmojis: customThemeEmojis
+        });
+      }
+      
+      setCustomThemeName("");
       console.log('Created custom theme:', newTheme);
     }
   };
@@ -140,9 +141,17 @@ export const AppSettingsModal = ({
 
   const handleAddCustomEmoji = () => {
     if (customEmojiInput.trim()) {
-      const newEmojis = [...homeCustomization.customEmojis, customEmojiInput.trim()];
-      handleHomeCustomizationUpdate({ customEmojis: newEmojis });
+      const newEmojis = [...customThemeEmojis, customEmojiInput.trim()];
+      setCustomThemeEmojis(newEmojis);
       setCustomEmojiInput("");
+    }
+  };
+
+  const handleAddHomeEmoji = () => {
+    if (homeEmojiInput.trim()) {
+      const newEmojis = [...homeCustomization.customEmojis, homeEmojiInput.trim()];
+      handleHomeCustomizationUpdate({ customEmojis: newEmojis });
+      setHomeEmojiInput("");
     }
   };
 
@@ -268,18 +277,62 @@ export const AppSettingsModal = ({
                     />
                   </div>
                 </div>
+
+                {/* Custom Emojis for Theme */}
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">Theme Decorative Emojis</Label>
+                  <div className="flex gap-2 mb-2">
+                    <Input
+                      value={customEmojiInput}
+                      onChange={(e) => setCustomEmojiInput(e.target.value)}
+                      placeholder="Add emoji (e.g., 🌟, 🎨, 📸)"
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handleAddCustomEmoji}
+                      disabled={!customEmojiInput.trim()}
+                      variant="outline"
+                      size="sm"
+                    >
+                      Add
+                    </Button>
+                  </div>
+                  
+                  {customThemeEmojis.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {customThemeEmojis.map((emoji, index) => (
+                        <span
+                          key={index}
+                          className="bg-gray-100 px-2 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200"
+                          onClick={() => {
+                            const newEmojis = customThemeEmojis.filter((_, i) => i !== index);
+                            setCustomThemeEmojis(newEmojis);
+                          }}
+                        >
+                          {emoji} ✕
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 
                 {/* Live Preview */}
                 <div className="p-4 rounded-xl border-2 border-gray-300">
                   <Label className="text-sm font-medium mb-2 block">Live Theme Preview</Label>
                   <div 
-                    className="w-full h-16 rounded-lg mb-3"
+                    className="w-full h-16 rounded-lg mb-3 flex items-center justify-center gap-2"
                     style={getLivePreviewStyle()}
-                  ></div>
+                  >
+                    {customThemeEmojis.slice(0, 4).map((emoji, index) => (
+                      <span key={index} className="text-2xl opacity-80">{emoji}</span>
+                    ))}
+                  </div>
                   <div 
-                    className="w-32 h-8 rounded-lg"
+                    className="w-32 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
                     style={getLiveButtonPreviewStyle()}
-                  ></div>
+                  >
+                    Button
+                  </div>
                 </div>
 
                 <Button
@@ -346,17 +399,17 @@ export const AppSettingsModal = ({
                 </div>
 
                 <div>
-                  <Label className="text-sm font-medium mb-2 block">Custom Decorative Emojis</Label>
+                  <Label className="text-sm font-medium mb-2 block">Home Screen Decorative Emojis</Label>
                   <div className="flex gap-2 mb-2">
                     <Input
-                      value={customEmojiInput}
-                      onChange={(e) => setCustomEmojiInput(e.target.value)}
+                      value={homeEmojiInput}
+                      onChange={(e) => setHomeEmojiInput(e.target.value)}
                       placeholder="Add emoji (e.g., 🌟, 🎨, 📸)"
                       className="flex-1"
                     />
                     <Button
-                      onClick={handleAddCustomEmoji}
-                      disabled={!customEmojiInput.trim()}
+                      onClick={handleAddHomeEmoji}
+                      disabled={!homeEmojiInput.trim()}
                       variant="outline"
                       size="sm"
                     >
