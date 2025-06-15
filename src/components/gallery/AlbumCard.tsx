@@ -5,6 +5,7 @@ import { Camera, Map, Heart, Tag } from "lucide-react";
 interface AlbumCardProps {
   album: Album;
   index: number;
+  onClick: () => void;
 }
 
 const categoryIcons = {
@@ -18,23 +19,32 @@ const themeStyles = {
   'comic-noir': 'bg-gradient-to-br from-gray-800 to-black text-white',
   'pastel-doodle': 'bg-gradient-to-br from-pink-200 to-purple-200 text-gray-800',
   'sticker-burst': 'bg-gradient-to-br from-yellow-300 to-orange-300 text-gray-800',
+  'neon-pop': 'bg-gradient-to-br from-cyan-400 to-blue-500 text-white',
+  'vintage-sketch': 'bg-gradient-to-br from-amber-200 to-orange-200 text-gray-800',
+  'kawaii-burst': 'bg-gradient-to-br from-pink-300 to-purple-300 text-gray-800',
 };
 
 const fontStyles = {
   handwritten: 'font-handwritten',
   typewriter: 'font-mono',
   bubble: 'font-black',
+  'google-font': 'font-sans',
 };
 
-export const AlbumCard = ({ album, index }: AlbumCardProps) => {
+export const AlbumCard = ({ album, index, onClick }: AlbumCardProps) => {
   const CategoryIcon = categoryIcons[album.category];
+  
+  const cardStyle = album.googleFont ? {
+    fontFamily: album.googleFont
+  } : {};
   
   return (
     <div 
       className={`relative group cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-rotate-1 comic-shadow ${
         index % 2 === 0 ? 'rotate-1' : '-rotate-1'
       }`}
-      style={{ animationDelay: `${index * 0.1}s` }}
+      onClick={onClick}
+      style={cardStyle}
     >
       <div className={`rounded-3xl p-6 border-4 border-black ${themeStyles[album.theme]} min-h-[250px] relative overflow-hidden`}>
         {/* Decorative elements */}
@@ -42,6 +52,9 @@ export const AlbumCard = ({ album, index }: AlbumCardProps) => {
           {album.theme === 'comic-noir' && '🖤'}
           {album.theme === 'pastel-doodle' && '🌸'}
           {album.theme === 'sticker-burst' && '⭐'}
+          {album.theme === 'neon-pop' && '💫'}
+          {album.theme === 'vintage-sketch' && '🎨'}
+          {album.theme === 'kawaii-burst' && '🦄'}
         </div>
         
         {/* Category badge */}
@@ -55,11 +68,11 @@ export const AlbumCard = ({ album, index }: AlbumCardProps) => {
         </div>
 
         {/* Album title */}
-        <h3 className={`text-2xl font-bold mb-4 ${fontStyles[album.font]} line-clamp-2`}>
+        <h3 className={`text-2xl font-bold mb-4 ${album.font !== 'google-font' ? fontStyles[album.font] : ''} line-clamp-2`}>
           {album.title}
         </h3>
 
-        {/* Photo count and preview */}
+        {/* Photo count and layout info */}
         <div className="absolute bottom-4 left-6 right-6">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium opacity-80">

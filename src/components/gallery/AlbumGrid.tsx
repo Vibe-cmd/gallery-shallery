@@ -4,9 +4,10 @@ import { AlbumCard } from "./AlbumCard";
 
 interface AlbumGridProps {
   albums: Album[];
+  onAlbumClick: (album: Album) => void;
 }
 
-export const AlbumGrid = ({ albums }: AlbumGridProps) => {
+export const AlbumGrid = ({ albums, onAlbumClick }: AlbumGridProps) => {
   if (albums.length === 0) {
     return (
       <div className="text-center py-16">
@@ -24,6 +25,7 @@ export const AlbumGrid = ({ albums }: AlbumGridProps) => {
           key={album.id} 
           album={album} 
           index={index}
+          onClick={() => onAlbumClick(album)}
         />
       ))}
     </div>

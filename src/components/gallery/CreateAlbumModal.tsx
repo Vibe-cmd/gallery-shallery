@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Album } from "@/pages/Index";
-import { Camera, Map, Heart, Tag } from "lucide-react";
 
 interface CreateAlbumModalProps {
   isOpen: boolean;
@@ -25,18 +24,23 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
   const [category, setCategory] = useState<Album['category']>('clicks');
   const [theme, setTheme] = useState<Album['theme']>('pastel-doodle');
   const [font, setFont] = useState<Album['font']>('handwritten');
+  const [googleFont, setGoogleFont] = useState("");
   const [layout, setLayout] = useState<Album['layout']>('grid');
 
   const themes = [
     { id: 'pastel-doodle', name: 'Pastel Doodle', preview: 'bg-gradient-to-br from-pink-200 to-purple-200' },
     { id: 'comic-noir', name: 'Comic Noir', preview: 'bg-gradient-to-br from-gray-800 to-black' },
     { id: 'sticker-burst', name: 'Sticker Burst', preview: 'bg-gradient-to-br from-yellow-300 to-orange-300' },
+    { id: 'neon-pop', name: 'Neon Pop', preview: 'bg-gradient-to-br from-cyan-400 to-blue-500' },
+    { id: 'vintage-sketch', name: 'Vintage Sketch', preview: 'bg-gradient-to-br from-amber-200 to-orange-200' },
+    { id: 'kawaii-burst', name: 'Kawaii Burst', preview: 'bg-gradient-to-br from-pink-300 to-purple-300' },
   ];
 
   const fonts = [
     { id: 'handwritten', name: 'Handwritten', preview: 'font-handwritten' },
     { id: 'typewriter', name: 'Typewriter', preview: 'font-mono' },
     { id: 'bubble', name: 'Bubble', preview: 'font-black' },
+    { id: 'google-font', name: 'Google Font', preview: 'font-sans' },
   ];
 
   const layouts = [
@@ -50,11 +54,20 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
     e.preventDefault();
     if (!title.trim()) return;
 
+    // Load Google Font if selected
+    if (font === 'google-font' && googleFont.trim()) {
+      const fontLink = document.createElement('link');
+      fontLink.href = `https://fonts.googleapis.com/css2?family=${googleFont.replace(' ', '+')}&display=swap`;
+      fontLink.rel = 'stylesheet';
+      document.head.appendChild(fontLink);
+    }
+
     onCreateAlbum({
       title: title.trim(),
       category,
       theme,
       font,
+      googleFont: font === 'google-font' ? googleFont : undefined,
       layout,
       photos: [],
     });
@@ -64,6 +77,7 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
     setCategory('clicks');
     setTheme('pastel-doodle');
     setFont('handwritten');
+    setGoogleFont("");
     setLayout('grid');
   };
 
@@ -116,7 +130,7 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
           {/* Theme Selection */}
           <div>
             <Label className="text-lg font-bold mb-3 block">Theme</Label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
               {themes.map((themeOption) => (
                 <button
                   key={themeOption.id}
@@ -129,7 +143,7 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
                   }`}
                 >
                   <div className={`w-full h-16 rounded-lg mb-2 ${themeOption.preview}`}></div>
-                  <span className="font-bold text-sm">{themeOption.name}</span>
+                  <span className="font-bold text-xs">{themeOption.name}</span>
                 </button>
               ))}
             </div>
@@ -138,7 +152,7 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
           {/* Font Selection */}
           <div>
             <Label className="text-lg font-bold mb-3 block">Font Style</Label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {fonts.map((fontOption) => (
                 <button
                   key={fontOption.id}
@@ -151,10 +165,22 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
                   }`}
                 >
                   <div className={`text-lg font-bold mb-1 ${fontOption.preview}`}>Abc</div>
-                  <span className="text-sm">{fontOption.name}</span>
+                  <span className="text-xs">{fontOption.name}</span>
                 </button>
               ))}
             </div>
+            
+            {/* Google Font Input */}
+            {font === 'google-font' && (
+              <div className="mt-3">
+                <Input
+                  value={googleFont}
+                  onChange={(e) => setGoogleFont(e.target.value)}
+                  placeholder="Enter Google Font name (e.g., Poppins, Roboto)"
+                  className="text-sm"
+                />
+              </div>
+            )}
           </div>
 
           {/* Layout Selection */}

@@ -8,7 +8,7 @@ export const ComicHeader = () => {
     const interval = setInterval(() => {
       setBounceText(true);
       setTimeout(() => setBounceText(false), 1000);
-    }, 5000);
+    }, 8000);
     return () => clearInterval(interval);
   }, []);
 
@@ -19,15 +19,15 @@ export const ComicHeader = () => {
         <div className="w-96 h-32 bg-gradient-to-r from-yellow-300 via-orange-300 to-red-300 rounded-full opacity-20 transform rotate-3"></div>
       </div>
       
-      <h1 className={`text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 relative z-10 comic-shadow ${bounceText ? 'animate-bounce' : ''}`}>
-        MEMZ!
+      <h1 className={`text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-pink-600 to-red-600 relative z-10 comic-shadow transition-all duration-300 ${bounceText ? 'animate-bounce' : ''}`}>
+        Gallery Shallery
       </h1>
       
       <div className="flex items-center justify-center gap-4 mt-4">
         <div className="bg-white rounded-full px-4 py-2 border-4 border-black comic-shadow transform -rotate-2">
           <p className="text-lg font-bold text-gray-800">Your Digital Scrapbook</p>
         </div>
-        <div className="text-4xl animate-pulse">🎨</div>
+        <div className="text-4xl">🎨</div>
       </div>
 
       {/* Speech bubble */}
