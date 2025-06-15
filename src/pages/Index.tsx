@@ -203,6 +203,49 @@ const Index = () => {
     console.log('Updated album:', updatedAlbum);
   };
 
+  const handleImportBackupData = (backupData: any) => {
+    try {
+      // Import albums
+      if (backupData.albums) {
+        const importedAlbums = backupData.albums.map((album: any) => ({
+          ...album,
+          createdAt: new Date(album.createdAt),
+          photos: album.photos.map((photo: any) => ({
+            ...photo,
+            date: photo.date ? new Date(photo.date) : undefined
+          }))
+        }));
+        setAlbums(importedAlbums);
+      }
+
+      // Import app theme
+      if (backupData.appTheme) {
+        setAppTheme(backupData.appTheme);
+      }
+
+      // Import home customization
+      if (backupData.homeCustomization) {
+        setHomeCustomization(backupData.homeCustomization);
+      }
+
+      // Import custom font
+      if (backupData.customFont) {
+        setCustomFont(backupData.customFont);
+        
+        // Re-load the font
+        const fontLink = document.createElement('link');
+        fontLink.href = `https://fonts.googleapis.com/css2?family=${backupData.customFont.replace(' ', '+')}&display=swap`;
+        fontLink.rel = 'stylesheet';
+        document.head.appendChild(fontLink);
+      }
+
+      console.log('Successfully imported backup data:', backupData);
+    } catch (error) {
+      console.error('Error importing backup data:', error);
+      throw error;
+    }
+  };
+
   if (currentAlbum) {
     return (
       <AlbumView 
@@ -532,6 +575,8 @@ const Index = () => {
           onHomeCustomizationChange={setHomeCustomization}
           customFont={customFont}
           onFontChange={setCustomFont}
+          albums={albums}
+          onImportData={handleImportBackupData}
         />
 
         {/* Floating Mascot */}
