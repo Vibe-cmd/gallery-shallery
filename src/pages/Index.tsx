@@ -257,9 +257,10 @@ const Index = () => {
         ></div>
       )}
 
-      {/* Comic background elements */}
+      {/* Comic background elements - increased quantity */}
       {homeCustomization.showDecorations && (
         <div className="absolute inset-0 opacity-30">
+          {/* Main 4 corner emojis */}
           <div 
             className="absolute top-10 left-10 text-6xl transform rotate-12"
             style={getEmojiStyle()}
@@ -284,22 +285,56 @@ const Index = () => {
           >
             {decorativeEmojis[3] || '🎨'}
           </div>
-          {decorativeEmojis.slice(4).map((emoji, index) => (
-            <div 
-              key={index}
-              className={`absolute text-4xl transform ${
-                index % 2 === 0 ? 'rotate-12' : '-rotate-12'
-              }`}
-              style={{
-                top: `${20 + (index * 15)}%`,
-                left: `${10 + (index * 20)}%`,
-                zIndex: 1,
-                ...getEmojiStyle()
-              }}
-            >
-              {emoji}
-            </div>
-          ))}
+          
+          {/* Additional scattered emojis for moderate level */}
+          <div 
+            className="absolute top-1/4 left-1/4 text-3xl transform rotate-45"
+            style={getEmojiStyle()}
+          >
+            {decorativeEmojis[4] || '🌈'}
+          </div>
+          <div 
+            className="absolute top-1/3 right-1/3 text-2xl transform -rotate-30"
+            style={getEmojiStyle()}
+          >
+            {decorativeEmojis[5] || '🎪'}
+          </div>
+          <div 
+            className="absolute bottom-1/3 left-1/5 text-4xl transform rotate-15"
+            style={getEmojiStyle()}
+          >
+            {decorativeEmojis[6] || '🎭'}
+          </div>
+          <div 
+            className="absolute bottom-1/4 right-1/4 text-3xl transform -rotate-60"
+            style={getEmojiStyle()}
+          >
+            {decorativeEmojis[7] || '🎨'}
+          </div>
+          <div 
+            className="absolute top-1/2 left-10 text-2xl transform rotate-90"
+            style={getEmojiStyle()}
+          >
+            {decorativeEmojis[8] || '🌟'}
+          </div>
+          <div 
+            className="absolute top-1/2 right-10 text-2xl transform -rotate-90"
+            style={getEmojiStyle()}
+          >
+            {decorativeEmojis[9] || '💖'}
+          </div>
+          <div 
+            className="absolute top-20 left-1/2 text-3xl transform rotate-30"
+            style={getEmojiStyle()}
+          >
+            {decorativeEmojis[10] || '🦄'}
+          </div>
+          <div 
+            className="absolute bottom-20 left-1/2 text-3xl transform -rotate-30"
+            style={getEmojiStyle()}
+          >
+            {decorativeEmojis[11] || '🌸'}
+          </div>
         </div>
       )}
 

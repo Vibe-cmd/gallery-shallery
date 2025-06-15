@@ -13,8 +13,11 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
     if (appTheme?.customColors) {
       return {
         ...titleStyle,
-        color: 'white',
-        textShadow: '4px 4px 8px rgba(0,0,0,0.9), 2px 2px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.7)',
+        background: `linear-gradient(45deg, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary}, ${appTheme.customColors.accent})`,
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        textShadow: 'none',
         fontWeight: '900'
       };
     }
@@ -50,6 +53,13 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
       return 'white';
     }
     return 'text-gray-800';
+  };
+
+  const getTitleClasses = () => {
+    if (appTheme?.customColors) {
+      return 'text-6xl md:text-8xl font-black comic-shadow transform hover:scale-105 transition-transform duration-300';
+    }
+    return `text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r ${appTheme?.accentColor || 'from-purple-600 via-pink-600 to-red-600'} comic-shadow transform hover:scale-105 transition-transform duration-300`;
   };
   
   return (
@@ -91,11 +101,7 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
       {/* Main title with enhanced styling */}
       <div className="relative z-10 space-y-4">
         <h1 
-          className={`text-6xl md:text-8xl font-black ${
-            appTheme?.customColors 
-              ? '' 
-              : `text-transparent bg-clip-text bg-gradient-to-r ${appTheme?.accentColor || 'from-purple-600 via-pink-600 to-red-600'}`
-          } comic-shadow transform hover:scale-105 transition-transform duration-300`}
+          className={getTitleClasses()}
           style={getTitleTextStyle()}
         >
           Gallery Shallery
