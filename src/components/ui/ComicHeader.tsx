@@ -1,3 +1,4 @@
+
 import { AppTheme } from "@/pages/Index";
 
 interface ComicHeaderProps {
@@ -77,9 +78,9 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
 
   const getTitleClasses = () => {
     if (appTheme?.customColors) {
-      return 'text-6xl md:text-8xl font-black comic-shadow transform hover:scale-105 transition-transform duration-300';
+      return 'text-6xl md:text-8xl font-black transform hover:scale-105 transition-transform duration-300';
     }
-    return `text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r ${appTheme?.accentColor || 'from-purple-600 via-pink-600 to-red-600'} comic-shadow transform hover:scale-105 transition-transform duration-300`;
+    return `text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-r ${appTheme?.accentColor || 'from-purple-600 via-pink-600 to-red-600'} transform hover:scale-105 transition-transform duration-300`;
   };
   
   return (
