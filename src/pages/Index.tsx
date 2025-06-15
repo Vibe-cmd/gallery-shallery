@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Plus, Camera, Map, Heart, Tag, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -143,11 +144,16 @@ const Index = () => {
     ? homeCustomization.customEmojis 
     : [];
 
-  // Unified theme styling functions
+  // Fixed theme styling functions
   const getMainBackgroundStyle = () => {
     if (appTheme.customColors) {
+      // Create a darker gradient for better contrast
       return {
-        background: `linear-gradient(135deg, ${appTheme.customColors.primary}40, ${appTheme.customColors.secondary}40, ${appTheme.customColors.accent}40)`
+        background: `linear-gradient(135deg, 
+          ${appTheme.customColors.primary}90, 
+          ${appTheme.customColors.secondary}90, 
+          ${appTheme.customColors.accent}70)`,
+        minHeight: '100vh'
       };
     }
     return {};
@@ -167,11 +173,12 @@ const Index = () => {
           background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
           color: 'white',
           border: `2px solid ${appTheme.customColors.accent}`,
-          textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+          textShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+          fontWeight: 'bold'
         };
       }
       return {
-        backgroundColor: 'white',
+        backgroundColor: 'rgba(255,255,255,0.9)',
         color: appTheme.customColors.primary,
         border: `2px solid ${appTheme.customColors.primary}`,
         fontWeight: 'bold'
@@ -185,7 +192,8 @@ const Index = () => {
       return {
         background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
         color: 'white',
-        textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+        textShadow: '1px 1px 2px rgba(0,0,0,0.7)',
+        fontWeight: 'bold'
       };
     }
     return {};
@@ -198,7 +206,8 @@ const Index = () => {
       return {
         ...baseStyle,
         color: 'white',
-        textShadow: '2px 2px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.5)'
+        textShadow: '3px 3px 6px rgba(0,0,0,0.9), 1px 1px 3px rgba(0,0,0,0.7)',
+        fontWeight: 'bold'
       };
     }
     return baseStyle;
@@ -220,11 +229,19 @@ const Index = () => {
   const getEmojiStyle = () => {
     if (appTheme.customColors) {
       return {
-        filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.8)) drop-shadow(1px 1px 2px rgba(255,255,255,0.3))',
-        opacity: 0.8
+        filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.9)) drop-shadow(1px 1px 3px rgba(255,255,255,0.6))',
+        opacity: 0.9,
+        fontSize: '1.2em'
       };
     }
     return {};
+  };
+
+  const getTextColorClass = () => {
+    if (appTheme.customColors) {
+      return 'text-white';
+    }
+    return 'text-gray-800';
   };
 
   return (
@@ -242,40 +259,28 @@ const Index = () => {
 
       {/* Comic background elements */}
       {homeCustomization.showDecorations && (
-        <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 opacity-30">
           <div 
             className="absolute top-10 left-10 text-6xl transform rotate-12"
-            style={{
-              ...getEmojiStyle(),
-              color: appTheme.customColors ? 'white' : undefined
-            }}
+            style={getEmojiStyle()}
           >
             {decorativeEmojis[0] || '💫'}
           </div>
           <div 
             className="absolute top-32 right-20 text-4xl transform -rotate-12"
-            style={{
-              ...getEmojiStyle(),
-              color: appTheme.customColors ? 'white' : undefined
-            }}
+            style={getEmojiStyle()}
           >
             {decorativeEmojis[1] || '⭐'}
           </div>
           <div 
             className="absolute bottom-20 left-32 text-5xl transform rotate-45"
-            style={{
-              ...getEmojiStyle(),
-              color: appTheme.customColors ? 'white' : undefined
-            }}
+            style={getEmojiStyle()}
           >
             {decorativeEmojis[2] || '✨'}
           </div>
           <div 
             className="absolute bottom-32 right-10 text-3xl transform -rotate-45"
-            style={{
-              ...getEmojiStyle(),
-              color: appTheme.customColors ? 'white' : undefined
-            }}
+            style={getEmojiStyle()}
           >
             {decorativeEmojis[3] || '🎨'}
           </div>
@@ -289,8 +294,7 @@ const Index = () => {
                 top: `${20 + (index * 15)}%`,
                 left: `${10 + (index * 20)}%`,
                 zIndex: 1,
-                ...getEmojiStyle(),
-                color: appTheme.customColors ? 'white' : undefined
+                ...getEmojiStyle()
               }}
             >
               {emoji}
@@ -321,7 +325,7 @@ const Index = () => {
           <Button
             variant={selectedCategory === null ? "default" : "outline"}
             onClick={() => setSelectedCategory(null)}
-            className="rounded-full font-bold comic-shadow transition-all duration-200 text-gray-800"
+            className={`rounded-full font-bold comic-shadow transition-all duration-200 ${getTextColorClass()}`}
             style={getButtonStyle(selectedCategory === null)}
           >
             All Albums
@@ -331,7 +335,7 @@ const Index = () => {
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
-              className={`rounded-full font-bold comic-shadow flex items-center gap-2 transition-all duration-200 text-gray-800 ${
+              className={`rounded-full font-bold comic-shadow flex items-center gap-2 transition-all duration-200 ${getTextColorClass()} ${
                 selectedCategory === category.id && !appTheme.customColors ? category.color : ''
               }`}
               style={getButtonStyle(selectedCategory === category.id)}

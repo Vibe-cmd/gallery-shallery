@@ -14,7 +14,8 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
       return {
         ...titleStyle,
         color: 'white',
-        textShadow: '3px 3px 6px rgba(0,0,0,0.8), 1px 1px 3px rgba(0,0,0,0.6)'
+        textShadow: '4px 4px 8px rgba(0,0,0,0.9), 2px 2px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.7)',
+        fontWeight: '900'
       };
     }
     return titleStyle;
@@ -24,7 +25,9 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
     if (appTheme?.customColors) {
       return {
         ...titleStyle,
-        textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+        color: 'white',
+        textShadow: '2px 2px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.6)',
+        fontWeight: 'bold'
       };
     }
     return titleStyle;
@@ -33,12 +36,20 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
   const getBubbleBackgroundStyle = () => {
     if (appTheme?.customColors) {
       return {
-        background: `linear-gradient(135deg, ${appTheme.customColors.primary}20, ${appTheme.customColors.secondary}30)`,
+        background: `linear-gradient(135deg, ${appTheme.customColors.primary}40, ${appTheme.customColors.secondary}50)`,
         backdropFilter: 'blur(10px)',
-        border: '2px solid rgba(255,255,255,0.3)'
+        border: '3px solid rgba(255,255,255,0.4)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
       };
     }
     return {};
+  };
+
+  const getBubbleTextColor = () => {
+    if (appTheme?.customColors) {
+      return 'white';
+    }
+    return 'text-gray-800';
   };
   
   return (
@@ -95,15 +106,13 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
           <div 
             className={`${
               appTheme?.customColors 
-                ? 'bg-white/90' 
+                ? '' 
                 : 'bg-white'
             } rounded-2xl px-6 py-3 border-4 border-black comic-shadow transform -rotate-1 hover:rotate-0 transition-transform duration-200`}
             style={appTheme?.customColors ? getBubbleBackgroundStyle() : {}}
           >
             <p 
-              className={`text-xl font-bold ${
-                appTheme?.customColors ? 'text-white' : 'text-gray-800'
-              }`} 
+              className={`text-xl font-bold ${getBubbleTextColor()}`} 
               style={getSubtitleStyle()}
             >
               Your Digital Scrapbook ✨
@@ -130,7 +139,8 @@ export const ComicHeader = ({ appTheme, customFont }: ComicHeaderProps) => {
             } px-4 py-2 rounded-full font-bold text-sm transform rotate-1`}
             style={appTheme?.customColors ? {
               background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
-              textShadow: '1px 1px 2px rgba(0,0,0,0.5)'
+              textShadow: '2px 2px 4px rgba(0,0,0,0.8), 1px 1px 2px rgba(0,0,0,0.6)',
+              fontWeight: 'bold'
             } : {}}
           >
             Create • Organize • Remember
