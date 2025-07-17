@@ -1,4 +1,3 @@
-
 import { AppTheme } from "@/pages/Index";
 
 interface ComicHeaderProps {
@@ -35,7 +34,7 @@ export const ComicHeader = ({
   const getTitleBackgroundStyle = () => {
     return {
       padding: '30px 50px 60px 50px',
-      position: 'relative',
+      position: 'relative' as const,
     };
   };
 
@@ -198,7 +197,7 @@ export const ComicHeader = ({
               ...getTitleTextStyle(),
               ...getTitleGradientStyle(),
               lineHeight: '1.1',
-              position: 'relative'
+              position: 'relative' as const
             }}
           >
             Gallery Shallery

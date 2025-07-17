@@ -281,7 +281,7 @@ const Index = () => {
             ${appTheme.customColors.secondary}10, 
             ${appTheme.customColors.accent}15)`,
         minHeight: '100vh',
-        position: 'relative'
+        position: 'relative' as const
       };
     }
     return {
