@@ -139,10 +139,10 @@ const Index = () => {
   }, [customFont]);
 
   const categories = [
-    { id: 'clicks', name: 'Clicks', icon: Camera, color: 'bg-yellow-400', description: 'Random photos & selfies' },
-    { id: 'travel', name: 'Travel', icon: Map, color: 'bg-green-400', description: 'Locations & journeys' },
-    { id: 'personal', name: 'Personal', icon: Heart, color: 'bg-pink-400', description: 'Life moments & people' },
-    { id: 'custom', name: 'Custom', icon: Tag, color: 'bg-purple-400', description: 'Your own tags' }
+    { id: 'clicks', name: 'Clicks', icon: Camera, color: 'bg-gradient-to-br from-yellow-400 via-orange-400 to-red-500', description: 'Random photos & selfies' },
+    { id: 'travel', name: 'Travel', icon: Map, color: 'bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600', description: 'Locations & journeys' },
+    { id: 'personal', name: 'Personal', icon: Heart, color: 'bg-gradient-to-br from-pink-400 via-rose-500 to-purple-600', description: 'Life moments & people' },
+    { id: 'custom', name: 'Custom', icon: Tag, color: 'bg-gradient-to-br from-purple-400 via-violet-500 to-indigo-600', description: 'Your own tags' }
   ];
 
   const filteredAlbums = selectedCategory === 'favorites'
@@ -268,19 +268,28 @@ const Index = () => {
     ? homeCustomization.customEmojis 
     : [];
 
-  // Fixed theme styling functions
+  // Enhanced theme styling functions with more dynamic effects
   const getMainBackgroundStyle = () => {
     if (appTheme.customColors) {
-      // Create a darker gradient for better contrast
       return {
-        background: `linear-gradient(135deg, 
-          ${appTheme.customColors.primary}90, 
-          ${appTheme.customColors.secondary}90, 
-          ${appTheme.customColors.accent}70)`,
-        minHeight: '100vh'
+        background: `
+          radial-gradient(circle at 20% 80%, ${appTheme.customColors.primary}40 0%, transparent 50%),
+          radial-gradient(circle at 80% 20%, ${appTheme.customColors.secondary}30 0%, transparent 50%),
+          radial-gradient(circle at 40% 40%, ${appTheme.customColors.accent}20 0%, transparent 50%),
+          linear-gradient(135deg, 
+            ${appTheme.customColors.primary}15, 
+            ${appTheme.customColors.secondary}10, 
+            ${appTheme.customColors.accent}15)`,
+        minHeight: '100vh',
+        position: 'relative'
       };
     }
-    return {};
+    return {
+      background: `
+        radial-gradient(circle at 20% 80%, rgba(168, 85, 247, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.2) 0%, transparent 50%)`
+    };
   };
 
   const getMainBackgroundClass = () => {
@@ -291,56 +300,69 @@ const Index = () => {
   };
 
   const getButtonStyle = (isSelected: boolean = false) => {
+    const baseStyle = {
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+      transform: isSelected ? 'scale(1.05)' : 'scale(1)',
+      backdropFilter: 'blur(20px)',
+      border: '2px solid',
+      fontWeight: 'bold',
+      textShadow: isSelected ? '0 2px 4px rgba(0,0,0,0.3)' : 'none',
+      boxShadow: isSelected 
+        ? '0 20px 40px rgba(0,0,0,0.2), 0 8px 16px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.2)' 
+        : '0 8px 25px rgba(0,0,0,0.1), 0 3px 10px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.1)'
+    };
+
     if (appTheme.customColors) {
       if (isSelected) {
         return {
-          background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary})`,
+          ...baseStyle,
+          background: `linear-gradient(135deg, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary}, ${appTheme.customColors.accent})`,
           color: 'white',
-          border: `2px solid ${appTheme.customColors.accent}`,
-          textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
-          fontWeight: 'bold'
+          borderColor: 'rgba(255,255,255,0.6)',
         };
       }
       return {
-        backgroundColor: 'rgba(255,255,255,0.95)',
+        ...baseStyle,
+        background: 'rgba(255,255,255,0.95)',
         color: appTheme.customColors.primary,
-        border: `2px solid ${appTheme.customColors.primary}`,
-        fontWeight: 'bold',
-        backdropFilter: 'blur(10px)'
+        borderColor: `${appTheme.customColors.primary}80`,
       };
     }
     
-    // Improved styling for default theme
     if (isSelected) {
       return {
-        backgroundColor: 'rgba(0,0,0,0.8)',
+        ...baseStyle,
+        background: 'linear-gradient(135deg, rgba(0,0,0,0.9), rgba(0,0,0,0.7))',
         color: 'white',
-        border: '2px solid rgba(255,255,255,0.3)',
-        textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
-        fontWeight: 'bold'
+        borderColor: 'rgba(255,255,255,0.4)',
       };
     }
     
     return {
-      backgroundColor: 'rgba(255,255,255,0.95)',
+      ...baseStyle,
+      background: 'rgba(255,255,255,0.95)',
       color: 'rgba(0,0,0,0.8)',
-      border: '2px solid rgba(255,255,255,0.5)',
-      fontWeight: 'bold',
-      backdropFilter: 'blur(10px)',
-      textShadow: 'none'
+      borderColor: 'rgba(255,255,255,0.6)',
     };
   };
 
   const getCreateButtonStyle = () => {
-    if (appTheme.customColors) {
-      return {
-        background: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
-        color: 'white',
-        textShadow: '1px 1px 2px rgba(0,0,0,0.7)',
-        fontWeight: 'bold'
-      };
-    }
-    return {};
+    const baseStyle = {
+      background: appTheme.customColors
+        ? `linear-gradient(135deg, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary}, ${appTheme.customColors.accent})`
+        : `linear-gradient(135deg, #a855f7, #ec4899, #3b82f6)`,
+      color: 'white',
+      textShadow: '0 2px 4px rgba(0,0,0,0.4)',
+      fontWeight: 'bold',
+      border: '2px solid rgba(255,255,255,0.3)',
+      boxShadow: `
+        0 25px 50px rgba(0,0,0,0.25), 
+        0 10px 20px rgba(0,0,0,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.3),
+        inset 0 -1px 0 rgba(0,0,0,0.2)`,
+      transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    };
+    return baseStyle;
   };
 
   const getTitleStyle = () => {
@@ -349,12 +371,19 @@ const Index = () => {
     if (appTheme.customColors) {
       return {
         ...baseStyle,
-        color: 'white',
-        textShadow: '3px 3px 6px rgba(0,0,0,0.9), 1px 1px 3px rgba(0,0,0,0.7)',
-        fontWeight: 'bold'
+        background: `linear-gradient(135deg, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary}, ${appTheme.customColors.accent})`,
+        WebkitBackgroundClip: 'text',
+        backgroundClip: 'text',
+        color: 'transparent',
+        textShadow: 'none',
+        fontWeight: '900',
+        filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))'
       };
     }
-    return baseStyle;
+    return {
+      ...baseStyle,
+      filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.2))'
+    };
   };
 
   const getComicHeaderTheme = () => {
@@ -363,7 +392,7 @@ const Index = () => {
         name: appTheme.name,
         primaryColor: appTheme.primaryColor,
         backgroundColor: appTheme.backgroundColor,
-        accentColor: `linear-gradient(to right, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`,
+        accentColor: `linear-gradient(135deg, ${appTheme.customColors.primary}, ${appTheme.customColors.secondary}, ${appTheme.customColors.accent})`,
         customColors: appTheme.customColors
       };
     }
@@ -371,15 +400,26 @@ const Index = () => {
   };
 
   const getEmojiStyle = () => {
+    const baseStyle = {
+      fontSize: '2em',
+      transition: 'all 0.3s ease',
+      animation: 'float 6s ease-in-out infinite'
+    };
+
     if (appTheme.customColors) {
       return {
-        filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.9)) drop-shadow(1px 1px 3px rgba(255,255,255,0.6))',
+        ...baseStyle,
+        filter: `
+          drop-shadow(4px 4px 8px rgba(0,0,0,0.4)) 
+          drop-shadow(2px 2px 4px ${appTheme.customColors.primary}40)
+          drop-shadow(-2px -2px 4px ${appTheme.customColors.accent}30)`,
         opacity: 0.9,
-        fontSize: '1.5em' // Increased size
       };
     }
     return {
-      fontSize: '1.5em' // Increased size for default theme too
+      ...baseStyle,
+      filter: 'drop-shadow(3px 3px 6px rgba(0,0,0,0.3))',
+      opacity: 0.8
     };
   };
 
@@ -392,106 +432,133 @@ const Index = () => {
 
   return (
     <div 
-      className={`min-h-screen relative overflow-hidden transition-all duration-500 ${getMainBackgroundClass()}`}
+      className={`min-h-screen relative overflow-hidden transition-all duration-700 ${getMainBackgroundClass()}`}
       style={getMainBackgroundStyle()}
     >
-      {/* Background Image Overlay */}
+      {/* Enhanced Background Image Overlay */}
       {homeCustomization.backgroundImage && (
         <div 
-          className="absolute inset-0 opacity-30"
-          style={backgroundStyle}
+          className="absolute inset-0 opacity-40"
+          style={{
+            ...backgroundStyle,
+            mixBlendMode: 'multiply'
+          }}
         ></div>
       )}
 
-      {/* Comic background elements - increased quantity */}
+      {/* Animated Background Orbs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div 
+          className="absolute w-96 h-96 rounded-full opacity-20 animate-pulse"
+          style={{
+            background: appTheme.customColors 
+              ? `radial-gradient(circle, ${appTheme.customColors.primary}60, transparent)`
+              : 'radial-gradient(circle, rgba(168, 85, 247, 0.6), transparent)',
+            top: '10%',
+            left: '10%',
+            animation: 'float 8s ease-in-out infinite'
+          }}
+        ></div>
+        <div 
+          className="absolute w-64 h-64 rounded-full opacity-30"
+          style={{
+            background: appTheme.customColors 
+              ? `radial-gradient(circle, ${appTheme.customColors.secondary}50, transparent)`
+              : 'radial-gradient(circle, rgba(236, 72, 153, 0.5), transparent)',
+            top: '60%',
+            right: '15%',
+            animation: 'float 10s ease-in-out infinite reverse'
+          }}
+        ></div>
+        <div 
+          className="absolute w-80 h-80 rounded-full opacity-25"
+          style={{
+            background: appTheme.customColors 
+              ? `radial-gradient(circle, ${appTheme.customColors.accent}40, transparent)`
+              : 'radial-gradient(circle, rgba(59, 130, 246, 0.4), transparent)',
+            bottom: '20%',
+            left: '20%',
+            animation: 'float 12s ease-in-out infinite'
+          }}
+        ></div>
+      </div>
+
+      {/* Enhanced decorative elements */}
       {homeCustomization.showDecorations && (
-        <div className="absolute inset-0 opacity-30">
-          {/* Main 4 corner emojis - increased sizes */}
+        <div className="absolute inset-0 opacity-40">
+          {/* Main 4 corner emojis with enhanced styling */}
           <div 
-            className="absolute top-10 left-10 text-8xl transform rotate-12"
-            style={getEmojiStyle()}
+            className="absolute top-10 left-10 transform rotate-12 hover:scale-110 transition-transform duration-300"
+            style={{
+              ...getEmojiStyle(),
+              animationDelay: '0s'
+            }}
           >
             {decorativeEmojis[0] || '💫'}
           </div>
           <div 
-            className="absolute top-32 right-20 text-6xl transform -rotate-12"
-            style={getEmojiStyle()}
+            className="absolute top-32 right-20 transform -rotate-12 hover:scale-110 transition-transform duration-300"
+            style={{
+              ...getEmojiStyle(),
+              animationDelay: '1s'
+            }}
           >
             {decorativeEmojis[1] || '⭐'}
           </div>
           <div 
-            className="absolute bottom-20 left-32 text-7xl transform rotate-45"
-            style={getEmojiStyle()}
+            className="absolute bottom-20 left-32 transform rotate-45 hover:scale-110 transition-transform duration-300"
+            style={{
+              ...getEmojiStyle(),
+              animationDelay: '2s'
+            }}
           >
             {decorativeEmojis[2] || '✨'}
           </div>
           <div 
-            className="absolute bottom-32 right-10 text-5xl transform -rotate-45"
-            style={getEmojiStyle()}
+            className="absolute bottom-32 right-10 transform -rotate-45 hover:scale-110 transition-transform duration-300"
+            style={{
+              ...getEmojiStyle(),
+              animationDelay: '3s'
+            }}
           >
             {decorativeEmojis[3] || '🎨'}
           </div>
           
-          {/* Additional scattered emojis for moderate level - increased sizes */}
-          <div 
-            className="absolute top-1/4 left-1/4 text-5xl transform rotate-45"
-            style={getEmojiStyle()}
-          >
-            {decorativeEmojis[4] || '🌈'}
-          </div>
-          <div 
-            className="absolute top-1/3 right-1/3 text-4xl transform -rotate-30"
-            style={getEmojiStyle()}
-          >
-            {decorativeEmojis[5] || '🎪'}
-          </div>
-          <div 
-            className="absolute bottom-1/3 left-1/5 text-6xl transform rotate-15"
-            style={getEmojiStyle()}
-          >
-            {decorativeEmojis[6] || '🎭'}
-          </div>
-          <div 
-            className="absolute bottom-1/4 right-1/4 text-5xl transform -rotate-60"
-            style={getEmojiStyle()}
-          >
-            {decorativeEmojis[7] || '🎨'}
-          </div>
-          <div 
-            className="absolute top-1/2 left-10 text-4xl transform rotate-90"
-            style={getEmojiStyle()}
-          >
-            {decorativeEmojis[8] || '🌟'}
-          </div>
-          <div 
-            className="absolute top-1/2 right-10 text-4xl transform -rotate-90"
-            style={getEmojiStyle()}
-          >
-            {decorativeEmojis[9] || '💖'}
-          </div>
-          <div 
-            className="absolute top-20 left-1/2 text-5xl transform rotate-30"
-            style={getEmojiStyle()}
-          >
-            {decorativeEmojis[10] || '🦄'}
-          </div>
-          <div 
-            className="absolute bottom-20 left-1/2 text-5xl transform -rotate-30"
-            style={getEmojiStyle()}
-          >
-            {decorativeEmojis[11] || '🌸'}
-          </div>
+          {/* Additional scattered emojis with staggered animations */}
+          {[4, 5, 6, 7, 8, 9, 10, 11].map((index) => (
+            <div
+              key={index}
+              className={`absolute transform hover:scale-110 transition-transform duration-300 ${
+                index % 2 === 0 ? 'animate-pulse' : ''
+              }`}
+              style={{
+                ...getEmojiStyle(),
+                top: `${20 + (index * 8)}%`,
+                left: `${10 + (index * 10)}%`,
+                animationDelay: `${index * 0.5}s`,
+                fontSize: '1.5em'
+              }}
+            >
+              {decorativeEmojis[index] || ['🌈', '🎪', '🎭', '🎨', '🌟', '💖', '🦄', '🌸'][index - 4]}
+            </div>
+          ))}
         </div>
       )}
 
       <div className="relative z-10 container mx-auto px-4 py-8">
-        {/* Settings Button */}
+        {/* Enhanced Settings Button */}
         <div className="fixed top-6 right-6 z-50">
           <Button
             onClick={() => setShowSettingsModal(true)}
             variant="outline"
             size="sm"
-            className="rounded-full bg-white hover:bg-gray-100 border-2 border-white shadow-lg"
+            className="rounded-full hover:scale-110 transition-all duration-300"
+            style={{
+              background: 'rgba(255,255,255,0.95)',
+              backdropFilter: 'blur(20px)',
+              border: '2px solid rgba(255,255,255,0.5)',
+              boxShadow: '0 8px 25px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3)'
+            }}
           >
             <Settings className="w-4 h-4" />
           </Button>
@@ -501,12 +568,12 @@ const Index = () => {
           <ComicHeader appTheme={getComicHeaderTheme()} customFont={customFont} />
         </div>
         
-        {/* Category Filter Bubbles */}
-        <div className="flex flex-wrap gap-4 mb-8 justify-center">
+        {/* Enhanced Category Filter Bubbles */}
+        <div className="flex flex-wrap gap-6 mb-12 justify-center">
           <Button
             variant={selectedCategory === null ? "default" : "outline"}
             onClick={() => setSelectedCategory(null)}
-            className="rounded-full font-bold transition-all duration-200 hover:scale-105"
+            className="rounded-full font-bold transition-all duration-300 hover:scale-105 hover:-translate-y-1"
             style={getButtonStyle(selectedCategory === null)}
           >
             All Albums
@@ -514,7 +581,7 @@ const Index = () => {
           <Button
             variant={selectedCategory === 'favorites' ? "default" : "outline"}
             onClick={() => setSelectedCategory('favorites')}
-            className="rounded-full font-bold flex items-center gap-2 transition-all duration-200 hover:scale-105"
+            className="rounded-full font-bold flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
             style={getButtonStyle(selectedCategory === 'favorites')}
           >
             <Heart className="w-4 h-4" />
@@ -525,7 +592,7 @@ const Index = () => {
               key={category.id}
               variant={selectedCategory === category.id ? "default" : "outline"}
               onClick={() => setSelectedCategory(category.id)}
-              className="rounded-full font-bold flex items-center gap-2 transition-all duration-200 hover:scale-105"
+              className="rounded-full font-bold flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:-translate-y-1"
               style={getButtonStyle(selectedCategory === category.id)}
             >
               <category.icon className="w-4 h-4" />
@@ -534,16 +601,15 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Create Album Button */}
-        <div className="text-center mb-8">
+        {/* Enhanced Create Album Button */}
+        <div className="text-center mb-12">
           <Button
             onClick={() => setShowCreateModal(true)}
-            className={`text-white font-bold py-4 px-8 rounded-full text-lg transform hover:scale-105 transition-all duration-200 hover:opacity-90 ${
-              appTheme.customColors ? '' : `bg-gradient-to-r ${appTheme.accentColor}`
-            }`}
-            style={appTheme.customColors ? getCreateButtonStyle() : {}}
+            className="text-white font-bold py-6 px-12 rounded-full text-xl transform hover:scale-110 hover:-translate-y-2 transition-all duration-300 hover:shadow-2xl relative overflow-hidden group"
+            style={getCreateButtonStyle()}
           >
-            <Plus className="w-6 h-6 mr-2" />
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-0 group-hover:opacity-20 transform -skew-x-12 translate-x-full group-hover:translate-x-full transition-all duration-700"></div>
+            <Plus className="w-8 h-8 mr-3" />
             Create New Album
           </Button>
         </div>
@@ -587,6 +653,25 @@ const Index = () => {
 
         {/* Floating Mascot */}
         <FloatingMascot />
+      </div>
+      
+      {/* Enhanced floating particles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {[...Array(6)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-2 h-2 rounded-full opacity-30"
+            style={{
+              background: appTheme.customColors 
+                ? `linear-gradient(45deg, ${appTheme.customColors.primary}, ${appTheme.customColors.accent})`
+                : 'linear-gradient(45deg, #a855f7, #ec4899)',
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
+              animationDelay: `${Math.random() * 2}s`
+            }}
+          ></div>
+        ))}
       </div>
     </div>
   );
