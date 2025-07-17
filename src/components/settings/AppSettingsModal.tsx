@@ -125,109 +125,92 @@ export const AppSettingsModal = ({
 
   const allThemes = [...predefinedThemes, ...customThemes];
 
-  // Theme styling functions
+  // Enhanced theme parsing for better color extraction
+  const extractThemeColors = (theme: AppTheme) => {
+    if (theme.customColors) {
+      return theme.customColors;
+    }
+
+    // Extract colors from Tailwind gradient strings
+    const colorMap = {
+      'purple-900': '#581c87', 'purple-500': '#a855f7', 'purple-400': '#c084fc',
+      'indigo-900': '#312e81', 'indigo-400': '#818cf8',
+      'blue-900': '#1e3a8a', 'blue-400': '#60a5fa', 'slate-900': '#0f172a', 'cyan-400': '#22d3ee',
+      'gray-800': '#1f2937', 'gray-900': '#111827', 'gray-400': '#9ca3af',
+      'emerald-900': '#064e3b', 'emerald-400': '#34d399', 'green-900': '#14532d', 'green-400': '#4ade80',
+      'red-900': '#7f1d1d', 'red-400': '#f87171', 'rose-900': '#881337', 'rose-400': '#fb7185',
+      'pink-500': '#ec4899', 'black': '#000000', 'white': '#ffffff'
+    };
+
+    const extractColor = (gradientStr: string, position: 'primary' | 'secondary' | 'accent') => {
+      if (gradientStr.includes('purple')) {
+        return position === 'primary' ? colorMap['purple-900'] : position === 'secondary' ? colorMap['purple-500'] : colorMap['purple-400'];
+      }
+      if (gradientStr.includes('blue')) {
+        return position === 'primary' ? colorMap['blue-900'] : position === 'secondary' ? colorMap['blue-400'] : colorMap['cyan-400'];
+      }
+      if (gradientStr.includes('gray')) {
+        return position === 'primary' ? colorMap['gray-800'] : position === 'secondary' ? colorMap['gray-900'] : colorMap['gray-400'];
+      }
+      if (gradientStr.includes('emerald') || gradientStr.includes('green')) {
+        return position === 'primary' ? colorMap['emerald-900'] : position === 'secondary' ? colorMap['green-400'] : colorMap['emerald-400'];
+      }
+      if (gradientStr.includes('red') || gradientStr.includes('rose')) {
+        return position === 'primary' ? colorMap['red-900'] : position === 'secondary' ? colorMap['rose-400'] : colorMap['red-400'];
+      }
+      // Default fallback
+      return position === 'primary' ? colorMap['purple-900'] : position === 'secondary' ? colorMap['purple-500'] : colorMap['purple-400'];
+    };
+
+    return {
+      primary: extractColor(theme.primaryColor, 'primary'),
+      secondary: extractColor(theme.accentColor, 'secondary'),
+      accent: extractColor(theme.accentColor, 'accent')
+    };
+  };
+
+  // Theme styling functions with dynamic color adaptation
   const getModalBackgroundStyle = () => {
-    if (currentTheme.customColors) {
-      return {
-        background: `linear-gradient(135deg, 
-          ${currentTheme.customColors.primary}95, 
-          ${currentTheme.customColors.secondary}90, 
-          ${currentTheme.customColors.accent}85)`,
-        color: 'white'
-      };
-    }
-    
-    // Handle dark themes
-    if (currentTheme.name.includes('Dark') || currentTheme.name === 'Noir' || currentTheme.name === 'Midnight Purple') {
-      return {
-        background: `linear-gradient(135deg, rgba(30, 30, 30, 0.95), rgba(50, 50, 50, 0.9))`,
-        color: 'white'
-      };
-    }
+    const colors = extractThemeColors(currentTheme);
     
     return {
-      background: `linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(250, 250, 250, 0.9))`,
-      color: 'rgb(30, 30, 30)'
+      background: `linear-gradient(135deg, ${colors.primary}95, ${colors.secondary}90, ${colors.accent}85)`,
+      color: 'white'
     };
   };
 
   const getTabsBackgroundStyle = () => {
-    if (currentTheme.customColors) {
-      return {
-        background: `linear-gradient(135deg, 
-          ${currentTheme.customColors.primary}20, 
-          ${currentTheme.customColors.secondary}15, 
-          ${currentTheme.customColors.accent}10)`,
-        backdropFilter: 'blur(10px)',
-        border: `1px solid ${currentTheme.customColors.primary}30`
-      };
-    }
-    
-    if (currentTheme.name.includes('Dark') || currentTheme.name === 'Noir' || currentTheme.name === 'Midnight Purple') {
-      return {
-        background: 'rgba(40, 40, 40, 0.7)',
-        backdropFilter: 'blur(10px)',
-        border: '1px solid rgba(255, 255, 255, 0.1)'
-      };
-    }
+    const colors = extractThemeColors(currentTheme);
     
     return {
-      background: 'rgba(255, 255, 255, 0.8)',
+      background: `linear-gradient(135deg, ${colors.primary}20, ${colors.secondary}15, ${colors.accent}10)`,
       backdropFilter: 'blur(10px)',
-      border: '1px solid rgba(0, 0, 0, 0.1)'
+      border: `1px solid ${colors.primary}30`
     };
   };
 
   const getInputStyle = () => {
-    if (currentTheme.customColors) {
-      return {
-        background: 'rgba(255, 255, 255, 0.1)',
-        border: `1px solid ${currentTheme.customColors.primary}40`,
-        color: 'white'
-      };
-    }
+    const colors = extractThemeColors(currentTheme);
     
-    if (currentTheme.name.includes('Dark') || currentTheme.name === 'Noir' || currentTheme.name === 'Midnight Purple') {
-      return {
-        background: 'rgba(255, 255, 255, 0.1)',
-        border: '1px solid rgba(255, 255, 255, 0.2)',
-        color: 'white'
-      };
-    }
-    
-    return {};
+    return {
+      background: 'rgba(255, 255, 255, 0.1)',
+      border: `1px solid ${colors.primary}40`,
+      color: 'white'
+    };
   };
 
   const getButtonStyle = () => {
-    if (currentTheme.customColors) {
-      return {
-        background: `linear-gradient(to right, ${currentTheme.customColors.primary}, ${currentTheme.customColors.secondary})`,
-        color: 'white',
-        border: 'none'
-      };
-    }
+    const colors = extractThemeColors(currentTheme);
     
-    if (currentTheme.name.includes('Dark') || currentTheme.name === 'Noir' || currentTheme.name === 'Midnight Purple') {
-      return {
-        background: 'linear-gradient(to right, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1))',
-        color: 'white',
-        border: '1px solid rgba(255, 255, 255, 0.3)'
-      };
-    }
-    
-    return {};
+    return {
+      background: `linear-gradient(to right, ${colors.primary}, ${colors.secondary})`,
+      color: 'white',
+      border: 'none'
+    };
   };
 
   const getTextColor = () => {
-    if (currentTheme.customColors) {
-      return 'text-white';
-    }
-    
-    if (currentTheme.name.includes('Dark') || currentTheme.name === 'Noir' || currentTheme.name === 'Midnight Purple') {
-      return 'text-white';
-    }
-    
-    return 'text-gray-900';
+    return 'text-white';
   };
 
   const handleAddGoogleFont = () => {
@@ -310,12 +293,10 @@ export const AppSettingsModal = ({
   };
 
   const getThemePreviewStyle = (theme: AppTheme) => {
-    if (theme.customColors) {
-      return {
-        background: `linear-gradient(to right, ${theme.customColors.primary}30, ${theme.customColors.secondary}30, ${theme.customColors.accent}30)`
-      };
-    }
-    return {};
+    const colors = extractThemeColors(theme);
+    return {
+      background: `linear-gradient(to right, ${colors.primary}30, ${colors.secondary}30, ${colors.accent}30)`
+    };
   };
 
   const getLivePreviewStyle = () => {
@@ -359,35 +340,32 @@ export const AppSettingsModal = ({
               <div>
                 <Label className={`text-lg font-bold mb-3 block ${getTextColor()}`}>App Theme</Label>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {allThemes.map((theme) => (
-                    <button
-                      key={theme.name}
-                      type="button"
-                      onClick={() => onThemeChange(theme)}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        currentTheme.name === theme.name
-                          ? 'border-purple-500 scale-105'
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                      style={{
-                        background: currentTheme.name === theme.name 
-                          ? (currentTheme.customColors 
-                            ? `${currentTheme.customColors.primary}20` 
-                            : 'rgba(168, 85, 247, 0.2)')
-                          : 'rgba(255, 255, 255, 0.1)'
-                      }}
-                    >
-                      <div 
-                        className={`w-full h-12 rounded-lg mb-2 ${
-                          theme.customColors 
-                            ? '' 
-                            : `bg-gradient-to-r ${theme.primaryColor}`
+                  {allThemes.map((theme) => {
+                    const themeColors = extractThemeColors(theme);
+                    return (
+                      <button
+                        key={theme.name}
+                        type="button"
+                        onClick={() => onThemeChange(theme)}
+                        className={`p-4 rounded-xl border-2 text-left transition-all ${
+                          currentTheme.name === theme.name
+                            ? 'border-white scale-105'
+                            : 'border-gray-500 hover:border-gray-300'
                         }`}
-                        style={theme.customColors ? getThemePreviewStyle(theme) : {}}
-                      ></div>
-                      <div className={`font-bold text-sm ${getTextColor()}`}>{theme.name}</div>
-                    </button>
-                  ))}
+                        style={{
+                          background: currentTheme.name === theme.name 
+                            ? `${themeColors.primary}40` 
+                            : `${themeColors.primary}20`
+                        }}
+                      >
+                        <div 
+                          className="w-full h-12 rounded-lg mb-2"
+                          style={getThemePreviewStyle(theme)}
+                        ></div>
+                        <div className={`font-bold text-sm ${getTextColor()}`}>{theme.name}</div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </TabsContent>
@@ -468,7 +446,8 @@ export const AppSettingsModal = ({
                         {customThemeEmojis.map((emoji, index) => (
                           <span
                             key={index}
-                            className="bg-gray-100 px-2 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200"
+                            className="px-2 py-1 rounded-full text-sm cursor-pointer hover:opacity-80"
+                            style={{ background: `${extractThemeColors(currentTheme).primary}40` }}
                             onClick={() => {
                               const newEmojis = customThemeEmojis.filter((_, i) => i !== index);
                               setCustomThemeEmojis(newEmojis);
@@ -482,7 +461,10 @@ export const AppSettingsModal = ({
                   </div>
                   
                   {/* Live Preview */}
-                  <div className="p-4 rounded-xl border-2 border-gray-300" style={getTabsBackgroundStyle()}>
+                  <div className="p-4 rounded-xl border-2" style={{ 
+                    ...getTabsBackgroundStyle(),
+                    borderColor: `${extractThemeColors(currentTheme).primary}50`
+                  }}>
                     <Label className={`text-sm font-medium mb-2 block ${getTextColor()}`}>Live Theme Preview</Label>
                     <div 
                       className="w-full h-16 rounded-lg mb-3 flex items-center justify-center gap-2"
@@ -543,8 +525,11 @@ export const AppSettingsModal = ({
                             type="file"
                             accept="image/*"
                             onChange={handleImageUpload}
-                            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100"
-                            style={getInputStyle()}
+                            className="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold hover:file:opacity-80"
+                            style={{
+                              ...getInputStyle(),
+                              background: `${extractThemeColors(currentTheme).primary}20`
+                            }}
                           />
                         </div>
                       </div>
@@ -594,7 +579,8 @@ export const AppSettingsModal = ({
                         {homeCustomization.customEmojis.map((emoji, index) => (
                           <span
                             key={index}
-                            className="bg-gray-100 px-2 py-1 rounded-full text-sm cursor-pointer hover:bg-gray-200"
+                            className="px-2 py-1 rounded-full text-sm cursor-pointer hover:opacity-80"
+                            style={{ background: `${extractThemeColors(currentTheme).primary}40` }}
                             onClick={() => {
                               const newEmojis = homeCustomization.customEmojis.filter((_, i) => i !== index);
                               handleHomeCustomizationUpdate({ customEmojis: newEmojis });
@@ -613,6 +599,7 @@ export const AppSettingsModal = ({
                       checked={homeCustomization.showDecorations}
                       onChange={(e) => handleHomeCustomizationUpdate({ showDecorations: e.target.checked })}
                       className="rounded"
+                      style={{ accentColor: extractThemeColors(currentTheme).primary }}
                     />
                     <Label className={`text-sm font-medium ${getTextColor()}`}>Show decorative elements</Label>
                   </div>
@@ -628,7 +615,6 @@ export const AppSettingsModal = ({
                     onClick={() => window.open('https://fonts.google.com', '_blank')}
                     variant="outline"
                     size="sm"
-                    className="text-blue-600 hover:text-blue-700"
                     style={getButtonStyle()}
                   >
                     <ExternalLink className="w-4 h-4 mr-2" />
@@ -656,7 +642,10 @@ export const AppSettingsModal = ({
                 </p>
                 
                 {customFont && (
-                  <div className="mt-4 p-3 rounded-lg border" style={getTabsBackgroundStyle()}>
+                  <div className="mt-4 p-3 rounded-lg border" style={{
+                    ...getTabsBackgroundStyle(),
+                    borderColor: `${extractThemeColors(currentTheme).primary}50`
+                  }}>
                     <p className={`text-sm ${getTextColor()}`}>
                       Current font: <span style={{ fontFamily: customFont }} className="font-bold">{customFont}</span>
                     </p>
