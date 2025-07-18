@@ -7,6 +7,8 @@ import { PhotoDetailModal } from "./PhotoDetailModal";
 import { MasonryLayout } from "../layouts/MasonryLayout";
 import { CircularGallery } from "../layouts/CircularGallery";
 import { StackLayout } from "../layouts/StackLayout";
+import { InfiniteScrollLayout } from "../layouts/InfiniteScrollLayout";
+import { InfiniteMenuLayout } from "../layouts/InfiniteMenuLayout";
 
 interface AlbumViewProps {
   album: Album;
@@ -263,7 +265,31 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
             onPhotoClick={handlePhotoClick}
             randomRotation={true}
             sendToBackOnClick={true}
-            cardDimensions={{ width: 250, height: 250 }}
+            cardDimensions={{ width: 300, height: 300 }}
+          />
+        );
+
+      case 'infinite-scroll':
+        return (
+          <InfiniteScrollLayout
+            photos={album.photos}
+            onPhotoClick={handlePhotoClick}
+            width="40rem"
+            maxHeight="70vh"
+            itemMinHeight={250}
+            isTilted={true}
+            tiltDirection="left"
+            autoplay={true}
+            autoplaySpeed={0.8}
+            pauseOnHover={true}
+          />
+        );
+
+      case 'infinite-menu':
+        return (
+          <InfiniteMenuLayout
+            photos={album.photos}
+            onPhotoClick={handlePhotoClick}
           />
         );
         

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -54,16 +53,18 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
   ];
 
   const layouts = [
-    { id: 'grid', name: 'Photo Grid', description: 'Classic grid layout' },
-    { id: 'panel', name: 'Comic Panel', description: 'Comic book style' },
-    { id: 'vertical', name: 'Vertical Scroll', description: 'Instagram-like feed' },
-    { id: 'collage', name: 'Collage Style', description: 'Artistic arrangement' },
-    { id: 'masonry', name: 'Masonry', description: 'Dynamic Pinterest-style layout' },
-    { id: 'timeline', name: 'Timeline', description: 'Chronological display' },
-    { id: 'polaroid', name: 'Polaroid Stack', description: 'Vintage photo stack' },
-    { id: 'magazine', name: 'Magazine Layout', description: 'Editorial style' },
-    { id: 'circular', name: 'Circular Gallery', description: '3D circular carousel' },
-    { id: 'stack', name: 'Stack Layout', description: 'Interactive card stack' },
+    { id: 'grid', name: 'Grid', icon: '▦', description: 'Classic photo grid' },
+    { id: 'masonry', name: 'Masonry', icon: '⬢', description: 'Pinterest-style layout' },
+    { id: 'timeline', name: 'Timeline', icon: '⟶', description: 'Chronological story' },
+    { id: 'polaroid', name: 'Polaroid', icon: '📷', description: 'Vintage photo style' },
+    { id: 'panel', name: 'Panel', icon: '▣', description: 'Large showcase panels' },
+    { id: 'vertical', name: 'Vertical', icon: '⫸', description: 'Single column flow' },
+    { id: 'collage', name: 'Collage', icon: '▦', description: 'Creative collage mix' },
+    { id: 'magazine', name: 'Magazine', icon: '▤', description: 'Editorial magazine style' },
+    { id: 'circular', name: 'Circular', icon: '○', description: '3D circular gallery' },
+    { id: 'stack', name: 'Stack', icon: '▢', description: 'Interactive card stack' },
+    { id: 'infinite-scroll', name: 'Infinite Scroll', icon: '∞', description: 'Smooth infinite scroll' },
+    { id: 'infinite-menu', name: 'Infinite Menu', icon: '◉', description: '3D sphere navigation' },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {

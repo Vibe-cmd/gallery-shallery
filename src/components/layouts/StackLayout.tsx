@@ -59,7 +59,7 @@ export const StackLayout = ({
   photos,
   randomRotation = false,
   sensitivity = 200,
-  cardDimensions = { width: 250, height: 250 },
+  cardDimensions = { width: 300, height: 300 }, // Increased size from 250x250
   animationConfig = { stiffness: 260, damping: 20 },
   sendToBackOnClick = false,
   onPhotoClick
@@ -78,14 +78,14 @@ export const StackLayout = ({
 
   if (photos.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div className="flex items-center justify-center h-96">
         <p className="text-gray-500">No photos to display</p>
       </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center min-h-96">
+    <div className="flex justify-center items-center min-h-[500px]"> {/* Increased container height */}
       <div
         className="relative"
         style={{
@@ -131,6 +131,11 @@ export const StackLayout = ({
                   alt={photo.title || `Photo ${photo.id}`}
                   className="w-full h-full object-cover pointer-events-none"
                 />
+                {photo.title && (
+                  <div className="absolute bottom-2 left-2 right-2 bg-black bg-opacity-70 text-white p-2 rounded text-center text-sm">
+                    {photo.title}
+                  </div>
+                )}
               </motion.div>
             </CardRotate>
           );
