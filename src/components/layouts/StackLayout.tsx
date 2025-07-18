@@ -59,7 +59,7 @@ export const StackLayout = ({
   photos,
   randomRotation = false,
   sensitivity = 200,
-  cardDimensions = { width: 208, height: 208 },
+  cardDimensions = { width: 250, height: 250 },
   animationConfig = { stiffness: 260, damping: 20 },
   sendToBackOnClick = false,
   onPhotoClick
