@@ -1,5 +1,5 @@
+
 import { useEffect, useRef } from "react";
-import { Camera, Mesh, Plane, Program, Renderer, Texture, Transform } from "ogl";
 import { Photo } from "@/pages/Index";
 
 interface CircularGalleryProps {
@@ -25,17 +25,6 @@ export const CircularGallery = ({
 }: CircularGalleryProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (!containerRef.current || photos.length === 0) return;
-
-    // For now, we'll use a simplified CSS-based circular gallery
-    // The full OGL implementation would be quite complex for this context
-    
-    return () => {
-      // Cleanup would go here
-    };
-  }, [photos, bend, textColor, borderRadius, font, scrollSpeed, scrollEase]);
-
   if (photos.length === 0) {
     return (
       <div className="flex items-center justify-center h-96">
@@ -51,20 +40,20 @@ export const CircularGallery = ({
   };
 
   return (
-    <div className="w-full h-96 relative overflow-hidden" ref={containerRef}>
-      {/* Increased size - now 600px height instead of default */}
-      <div className="circular-gallery w-full h-[600px] relative flex items-center justify-center perspective-1000">
-        <div className="relative w-80 h-80 transform-gpu">
+    <div className="w-full h-[700px] relative overflow-hidden" ref={containerRef}>
+      {/* Increased size - now 700px height */}
+      <div className="circular-gallery w-full h-full relative flex items-center justify-center perspective-1000">
+        <div className="relative w-96 h-96 transform-gpu">
           {photos.map((photo, index) => {
             const angle = (360 / photos.length) * index;
-            const radius = 200; // Increased radius for better visibility
+            const radius = 250; // Increased radius for better visibility
             const x = Math.cos((angle * Math.PI) / 180) * radius;
             const y = Math.sin((angle * Math.PI) / 180) * radius;
             
             return (
               <div
                 key={photo.id}
-                className="absolute w-32 h-32 bg-white rounded-2xl border-4 border-black overflow-hidden cursor-pointer transform hover:scale-110 transition-all duration-300 shadow-lg"
+                className="absolute w-40 h-40 bg-white rounded-2xl border-4 border-black overflow-hidden cursor-pointer transform hover:scale-110 transition-all duration-300 shadow-lg"
                 style={{
                   transform: `translate3d(${x}px, ${y}px, 0) rotateY(${angle}deg)`,
                   transformOrigin: 'center center',

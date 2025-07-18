@@ -153,6 +153,7 @@ export const MasonryLayout: React.FC<MasonryLayoutProps> = ({
 
     const colHeights = new Array(columns).fill(0);
     const columnWidth = width / columns;
+    const gap = 10;
 
     return items.map((child) => {
       const col = colHeights.indexOf(Math.min(...colHeights));
@@ -160,15 +161,15 @@ export const MasonryLayout: React.FC<MasonryLayoutProps> = ({
       const height = child.height;
       const y = colHeights[col];
 
-      colHeights[col] += height + 10; // Add gap
+      colHeights[col] += height + gap;
 
-      return { ...child, x, y, w: columnWidth - 10, h: height }; // Subtract gap from width
+      return { ...child, x, y, w: columnWidth - gap, h: height };
     });
   }, [columns, items, width]);
 
   const containerHeight = useMemo(() => {
-    if (grid.length === 0) return 0;
-    return Math.max(...grid.map(item => item.y + item.h)) + 50; // Add some padding
+    if (grid.length === 0) return 400;
+    return Math.max(...grid.map(item => item.y + item.h)) + 50;
   }, [grid]);
 
   const hasMounted = useRef(false);
@@ -272,39 +273,41 @@ export const MasonryLayout: React.FC<MasonryLayoutProps> = ({
   }
 
   return (
-    <div 
-      ref={containerRef} 
-      className="relative w-full"
-      style={{ height: `${containerHeight}px`, minHeight: '400px' }}
-    >
-      {grid.map((item) => {
-        return (
-          <div
-            key={item.id}
-            data-key={item.id}
-            className="absolute cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
-            onClick={() => onPhotoClick?.(item)}
-            onMouseEnter={(e) => handleMouseEnter(e, item)}
-            onMouseLeave={(e) => handleMouseLeave(e, item)}
-          >
+    <div className="w-full min-h-screen bg-transparent">
+      <div 
+        ref={containerRef} 
+        className="relative w-full"
+        style={{ height: `${containerHeight}px` }}
+      >
+        {grid.map((item) => {
+          return (
             <div
-              className="relative w-full h-full bg-cover bg-center"
-              style={{ backgroundImage: `url(${item.url})` }}
+              key={item.id}
+              data-key={item.id}
+              className="absolute cursor-pointer rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow"
+              onClick={() => onPhotoClick?.(item)}
+              onMouseEnter={(e) => handleMouseEnter(e, item)}
+              onMouseLeave={(e) => handleMouseLeave(e, item)}
             >
-              {colorShiftOnHover && (
-                <div
-                  className="color-overlay absolute top-0 left-0 w-full h-full pointer-events-none rounded-lg"
-                  style={{
-                    background:
-                      "linear-gradient(45deg, rgba(255,0,150,0.5), rgba(0,150,255,0.5))",
-                    opacity: 0,
-                  }}
-                />
-              )}
+              <div
+                className="relative w-full h-full bg-cover bg-center"
+                style={{ backgroundImage: `url(${item.url})` }}
+              >
+                {colorShiftOnHover && (
+                  <div
+                    className="color-overlay absolute top-0 left-0 w-full h-full pointer-events-none rounded-lg"
+                    style={{
+                      background:
+                        "linear-gradient(45deg, rgba(255,0,150,0.5), rgba(0,150,255,0.5))",
+                      opacity: 0,
+                    }}
+                  />
+                )}
+              </div>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 };

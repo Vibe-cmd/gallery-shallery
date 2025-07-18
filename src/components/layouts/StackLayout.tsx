@@ -59,7 +59,7 @@ export const StackLayout = ({
   photos,
   randomRotation = false,
   sensitivity = 200,
-  cardDimensions = { width: 300, height: 300 }, // Increased size from 250x250
+  cardDimensions = { width: 400, height: 400 }, // Increased size from 300x300
   animationConfig = { stiffness: 260, damping: 20 },
   sendToBackOnClick = false,
   onPhotoClick
@@ -85,7 +85,7 @@ export const StackLayout = ({
   }
 
   return (
-    <div className="flex justify-center items-center min-h-[500px]"> {/* Increased container height */}
+    <div className="flex justify-center items-center min-h-[600px]"> {/* Increased container height */}
       <div
         className="relative"
         style={{

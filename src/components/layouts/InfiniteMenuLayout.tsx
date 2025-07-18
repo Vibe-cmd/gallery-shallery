@@ -232,103 +232,14 @@ class IcosahedronGeometry extends Geometry {
     super();
     const t = Math.sqrt(5) * 0.5 + 0.5;
     this.addVertex(
-      -1,
-      t,
-      0,
-      1,
-      t,
-      0,
-      -1,
-      -t,
-      0,
-      1,
-      -t,
-      0,
-      0,
-      -1,
-      t,
-      0,
-      1,
-      t,
-      0,
-      -1,
-      -t,
-      0,
-      1,
-      -t,
-      t,
-      0,
-      -1,
-      t,
-      0,
-      1,
-      -t,
-      0,
-      -1,
-      -t,
-      0,
-      1
+      -1, t, 0, 1, t, 0, -1, -t, 0, 1, -t, 0,
+      0, -1, t, 0, 1, t, 0, -1, -t, 0, 1, -t,
+      t, 0, -1, t, 0, 1, -t, 0, -1, -t, 0, 1
     ).addFace(
-      0,
-      11,
-      5,
-      0,
-      5,
-      1,
-      0,
-      1,
-      7,
-      0,
-      7,
-      10,
-      0,
-      10,
-      11,
-      1,
-      5,
-      9,
-      5,
-      11,
-      4,
-      11,
-      10,
-      2,
-      10,
-      7,
-      6,
-      7,
-      1,
-      8,
-      3,
-      9,
-      4,
-      3,
-      4,
-      2,
-      3,
-      2,
-      6,
-      3,
-      6,
-      8,
-      3,
-      8,
-      9,
-      4,
-      9,
-      5,
-      2,
-      4,
-      11,
-      6,
-      2,
-      10,
-      8,
-      6,
-      7,
-      9,
-      8,
-      1
+      0, 11, 5, 0, 5, 1, 0, 1, 7, 0, 7, 10, 0, 10, 11,
+      1, 5, 9, 5, 11, 4, 11, 10, 2, 10, 7, 6, 7, 1, 8,
+      3, 9, 4, 3, 4, 2, 3, 2, 6, 3, 6, 8, 3, 8, 9,
+      4, 9, 5, 2, 4, 11, 6, 2, 10, 8, 6, 7, 9, 8, 1
     );
   }
 }
@@ -1307,42 +1218,32 @@ export const InfiniteMenuLayout: FC<InfiniteMenuLayoutProps> = ({
         id="infinite-grid-menu-canvas" 
         ref={canvasRef}
         className="w-full h-full cursor-grab active:cursor-grabbing"
+        style={{ outline: 'none' }}
       />
       
-      {/* Simplified fallback grid for now */}
-      <div className="absolute inset-0 grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 p-4 overflow-hidden">
-        {photos.slice(0, 15).map((photo, index) => (
-          <div
-            key={photo.id}
-            className="relative bg-white rounded-lg overflow-hidden cursor-pointer transform hover:scale-105 transition-all duration-200"
-            onClick={() => onPhotoClick?.(photo)}
-            style={{
-              transform: `rotateX(${Math.random() * 20 - 10}deg) rotateY(${Math.random() * 20 - 10}deg)`,
-              opacity: 0.8 + Math.random() * 0.2
-            }}
-          >
-            <img
-              src={photo.url}
-              alt={photo.title || 'Photo'}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        ))}
-      </div>
-
       {activePhoto && (
         <>
-          <h2 className={`absolute top-1/2 left-8 transform -translate-y-1/2 text-white font-black text-2xl md:text-4xl ${isMoving ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+          <h2 
+            className={`absolute top-1/2 left-8 transform -translate-y-1/2 text-white font-black text-2xl md:text-4xl transition-all duration-500 ${
+              isMoving ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
             {activePhoto.title || 'Photo'}
           </h2>
 
-          <p className={`absolute top-1/2 right-8 transform -translate-y-1/2 text-white text-sm md:text-lg max-w-xs ${isMoving ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}>
+          <p 
+            className={`absolute top-1/2 right-8 transform -translate-y-1/2 text-white text-sm md:text-lg max-w-xs transition-all duration-500 ${
+              isMoving ? 'opacity-0' : 'opacity-100'
+            }`}
+          >
             {activePhoto.backstory || activePhoto.location || 'Gallery photo'}
           </p>
 
           <div
             onClick={handlePhotoClick}
-            className={`absolute bottom-16 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-blue-600 border-4 border-black rounded-full cursor-pointer flex items-center justify-center text-white text-2xl ${isMoving ? 'opacity-0 scale-0' : 'opacity-100 scale-100'} transition-all duration-300`}
+            className={`absolute bottom-16 left-1/2 transform -translate-x-1/2 w-16 h-16 bg-blue-600 border-4 border-black rounded-full cursor-pointer flex items-center justify-center text-white text-2xl transition-all duration-500 ${
+              isMoving ? 'opacity-0 scale-0' : 'opacity-100 scale-100'
+            }`}
           >
             ↗
           </div>
