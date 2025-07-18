@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Album, Photo, AppTheme } from "@/pages/Index";
 import { PhotoReviewModal } from "./PhotoReviewModal";
 import { PhotoDetailModal } from "./PhotoDetailModal";
+import { MasonryLayout } from "../layouts/MasonryLayout";
+import { CircularGallery } from "../layouts/CircularGallery";
+import { StackLayout } from "../layouts/StackLayout";
 
 interface AlbumViewProps {
   album: Album;
@@ -211,6 +214,76 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
     );
   };
 
+  const renderLayoutContent = () => {
+    if (album.photos.length === 0) {
+      return (
+        <div className="text-center py-16">
+          <div className="text-8xl mb-4">📸</div>
+          <h3 className="text-2xl font-bold text-gray-600 mb-2">No photos yet!</h3>
+          <p className="text-gray-500 mb-6">Start adding photos to your album</p>
+          <Button
+            onClick={handleAddPhoto}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-full"
+          >
+            <Upload className="w-5 h-5 mr-2" />
+            Upload First Photo
+          </Button>
+        </div>
+      );
+    }
+
+    switch (album.layout) {
+      case 'masonry':
+        return (
+          <MasonryLayout
+            photos={album.photos}
+            onPhotoClick={handlePhotoClick}
+            scaleOnHover={true}
+            hoverScale={1.05}
+            blurToFocus={true}
+            colorShiftOnHover={false}
+            animateFrom="bottom"
+          />
+        );
+        
+      case 'circular':
+        return (
+          <CircularGallery
+            photos={album.photos}
+            onPhotoClick={handlePhotoClick}
+            bend={3}
+            textColor="#ffffff"
+          />
+        );
+        
+      case 'stack':
+        return (
+          <StackLayout
+            photos={album.photos}
+            onPhotoClick={handlePhotoClick}
+            randomRotation={true}
+            sendToBackOnClick={true}
+            cardDimensions={{ width: 250, height: 250 }}
+          />
+        );
+        
+      default:
+        return (
+          <div className={getLayoutClasses()}>
+            {album.photos.map((photo, index) => (
+              <div
+                key={photo.id}
+                className={getPhotoCardClasses(index)}
+                onClick={() => handlePhotoClick(photo)}
+              >
+                {renderPhotoContent(photo, index)}
+              </div>
+            ))}
+          </div>
+        );
+    }
+  };
+
   return (
     <div className={`min-h-screen bg-gradient-to-br ${appTheme.primaryColor} transition-all duration-500`}>
       <div className="container mx-auto px-4 py-8">
@@ -256,33 +329,8 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
           </Button>
         </div>
 
-        {/* Photos Grid */}
-        {album.photos.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="text-8xl mb-4">📸</div>
-            <h3 className="text-2xl font-bold text-gray-600 mb-2">No photos yet!</h3>
-            <p className="text-gray-500 mb-6">Start adding photos to your album</p>
-            <Button
-              onClick={handleAddPhoto}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-6 rounded-full"
-            >
-              <Upload className="w-5 h-5 mr-2" />
-              Upload First Photo
-            </Button>
-          </div>
-        ) : (
-          <div className={getLayoutClasses()}>
-            {album.photos.map((photo, index) => (
-              <div
-                key={photo.id}
-                className={getPhotoCardClasses(index)}
-                onClick={() => handlePhotoClick(photo)}
-              >
-                {renderPhotoContent(photo, index)}
-              </div>
-            ))}
-          </div>
-        )}
+        {/* Layout Content */}
+        {renderLayoutContent()}
 
         {/* Photo Review Modal */}
         <PhotoReviewModal

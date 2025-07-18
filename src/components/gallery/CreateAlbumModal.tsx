@@ -58,10 +58,12 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
     { id: 'panel', name: 'Comic Panel', description: 'Comic book style' },
     { id: 'vertical', name: 'Vertical Scroll', description: 'Instagram-like feed' },
     { id: 'collage', name: 'Collage Style', description: 'Artistic arrangement' },
-    { id: 'masonry', name: 'Masonry', description: 'Pinterest-style layout' },
+    { id: 'masonry', name: 'Masonry', description: 'Dynamic Pinterest-style layout' },
     { id: 'timeline', name: 'Timeline', description: 'Chronological display' },
     { id: 'polaroid', name: 'Polaroid Stack', description: 'Vintage photo stack' },
     { id: 'magazine', name: 'Magazine Layout', description: 'Editorial style' },
+    { id: 'circular', name: 'Circular Gallery', description: '3D circular carousel' },
+    { id: 'stack', name: 'Stack Layout', description: 'Interactive card stack' },
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -200,7 +202,7 @@ export const CreateAlbumModal = ({ isOpen, onClose, onCreateAlbum, categories }:
           {/* Layout Selection */}
           <div>
             <Label className="text-lg font-bold mb-3 block">Layout Style</Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {layouts.map((layoutOption) => (
                 <button
                   key={layoutOption.id}

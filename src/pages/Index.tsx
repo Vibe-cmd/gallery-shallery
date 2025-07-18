@@ -17,7 +17,7 @@ export interface Album {
   theme: 'comic-noir' | 'pastel-doodle' | 'sticker-burst' | 'neon-pop' | 'vintage-sketch' | 'kawaii-burst' | 'retro-wave' | 'forest-nature' | 'ocean-depths' | 'sunset-glow' | 'minimalist-white' | 'galaxy-space';
   font: 'handwritten' | 'typewriter' | 'bubble' | 'google-font' | 'serif-classic' | 'sans-modern' | 'script-elegant' | 'display-bold';
   googleFont?: string;
-  layout: 'panel' | 'vertical' | 'grid' | 'collage' | 'masonry' | 'timeline' | 'polaroid' | 'magazine';
+  layout: 'panel' | 'vertical' | 'grid' | 'collage' | 'masonry' | 'timeline' | 'polaroid' | 'magazine' | 'circular' | 'stack';
   coverIcon?: string;
   photos: Photo[];
   createdAt: Date;
