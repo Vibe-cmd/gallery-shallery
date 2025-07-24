@@ -40,40 +40,38 @@ export const CircularGallery = ({
   };
 
   return (
-    <div className="w-full h-[700px] relative overflow-hidden" ref={containerRef}>
-      {/* Increased size - now 700px height */}
-      <div className="circular-gallery w-full h-full relative flex items-center justify-center perspective-1000">
-        <div className="relative w-96 h-96 transform-gpu">
-          {photos.map((photo, index) => {
-            const angle = (360 / photos.length) * index;
-            const radius = 250; // Increased radius for better visibility
-            const x = Math.cos((angle * Math.PI) / 180) * radius;
-            const y = Math.sin((angle * Math.PI) / 180) * radius;
-            
-            return (
-              <div
-                key={photo.id}
-                className="absolute w-40 h-40 bg-white rounded-2xl border-4 border-black overflow-hidden cursor-pointer transform hover:scale-110 transition-all duration-300 shadow-lg"
-                style={{
-                  transform: `translate3d(${x}px, ${y}px, 0) rotateY(${angle}deg)`,
-                  transformOrigin: 'center center',
-                }}
-                onClick={() => handlePhotoClick(photo)}
-              >
-                <img
-                  src={photo.url}
-                  alt={photo.title || 'Photo'}
-                  className="w-full h-full object-cover"
-                />
-                {photo.title && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 text-center">
-                    {photo.title}
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </div>
+    <div className="w-full h-[700px] relative overflow-hidden flex items-center justify-center" ref={containerRef}>
+      <div className="relative w-[600px] h-[600px] transform-gpu">
+        {photos.map((photo, index) => {
+          const angle = (360 / photos.length) * index;
+          const radius = 250; // Increased radius for better visibility
+          const x = Math.cos((angle * Math.PI) / 180) * radius;
+          const y = Math.sin((angle * Math.PI) / 180) * radius;
+          
+          return (
+            <div
+              key={photo.id}
+              className="absolute w-40 h-40 bg-white rounded-2xl border-4 border-black overflow-hidden cursor-pointer transform hover:scale-110 transition-all duration-300 shadow-lg"
+              style={{
+                transform: `translate(calc(50% + ${x}px), calc(50% + ${y}px))`,
+                left: '-80px', // Half of width to center
+                top: '-80px', // Half of height to center
+              }}
+              onClick={() => handlePhotoClick(photo)}
+            >
+              <img
+                src={photo.url}
+                alt={photo.title || 'Photo'}
+                className="w-full h-full object-cover"
+              />
+              {photo.title && (
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-xs p-1 text-center">
+                  {photo.title}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

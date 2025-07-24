@@ -1,6 +1,6 @@
 
 import { motion, useMotionValue, useTransform } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Photo } from "@/pages/Index";
 
 interface CardRotateProps {
@@ -65,6 +65,11 @@ export const StackLayout = ({
   onPhotoClick
 }: StackLayoutProps) => {
   const [cards, setCards] = useState(photos);
+  
+  // Update cards when photos prop changes
+  useEffect(() => {
+    setCards(photos);
+  }, [photos]);
 
   const sendToBack = (photoId: string) => {
     setCards((prev) => {

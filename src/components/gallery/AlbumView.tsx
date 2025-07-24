@@ -5,6 +5,7 @@ import { Album, Photo, AppTheme } from "@/pages/Index";
 import { PhotoReviewModal } from "./PhotoReviewModal";
 import { PhotoDetailModal } from "./PhotoDetailModal";
 import { MasonryLayout } from "../layouts/MasonryLayout";
+import { MagazineLayout } from "../layouts/MagazineLayout";
 import { CircularGallery } from "../layouts/CircularGallery";
 import { StackLayout } from "../layouts/StackLayout";
 import { InfiniteScrollLayout } from "../layouts/InfiniteScrollLayout";
@@ -288,6 +289,14 @@ export const AlbumView = ({ album, onBack, onUpdateAlbum, appTheme }: AlbumViewP
       case 'infinite-menu':
         return (
           <InfiniteMenuLayout
+            photos={album.photos}
+            onPhotoClick={handlePhotoClick}
+          />
+        );
+
+      case 'magazine':
+        return (
+          <MagazineLayout
             photos={album.photos}
             onPhotoClick={handlePhotoClick}
           />
